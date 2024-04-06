@@ -10,6 +10,10 @@ jobs:
     name: Pre-checks
     runs-on: ubuntu-latest
 
+    env:
+      INPUT_DIRECTORY: /  # Adjust this to your directory path
+      INPUT_PREFIX: pre*  # Adjust this to your prefix
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -20,8 +24,9 @@ jobs:
         python-version: '3.x'  # Choose the Python version you want to use
 
     - name: Install dependencies
-      run: pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
+      run: echo "No dependencies required"
 
     - name: Run pre-checks
       run: |
-        python pre_checks.py "${{ github.workspace }}"  # Replace with the name of your pre-check script
+        pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
+        python pre_checks.py "${{ github.workspace }}/${{ env.INPUT_DIRECTORY }}" "${{ env.INPUT_PREFIX }}"
