@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      INPUT_DIRECTORY: github.workspace/*  # Adjust this to your directory path
-      INPUT_PREFIX: pre_*  # Adjust this to your prefix
+      INPUT_DIRECTORY: 'datamigration'  # Adjust this to your directory path
+      INPUT_PREFIX: 'pre_'  # Adjust this to your prefix
 
     steps:
     - name: Checkout repository
