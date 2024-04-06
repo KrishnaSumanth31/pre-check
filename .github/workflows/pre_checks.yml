@@ -24,4 +24,4 @@ jobs:
 
     - name: Run pre-checks
       run: |
-        python pre_checks.py  # Replace with the name of your pre-check script
+        python pre_checks.py "${{ github.workspace }}"  # Replace with the name of your pre-check script
