@@ -6,7 +6,7 @@ def check_files(directory):
            file_path = os.path.join(root, file)
            if file.endswith('.py') or file.endswith('.yml'):
               if not file_is_valid(file, prefix):
-                  print(f "File {file} in {root} does not meet naming convention.")
+                  print(f"File {file} in {root} does not meet naming convention.")
            else:
               print(f"File {file} in {root} has incorrect extension.")
 
