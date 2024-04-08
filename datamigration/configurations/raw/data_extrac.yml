@@ -8,5 +8,5 @@ details:
          log_bucket: my_bucket_config_dev
        
        - postgre_schema: raw
-         postgre_table_name: 
+         postgre_table_name: demo
          log_bucket: my_bucket_config_dev
