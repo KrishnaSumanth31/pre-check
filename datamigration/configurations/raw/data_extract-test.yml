@@ -6,6 +6,7 @@ details:
        - postgre_schema: raw
          postgre_table_name: mytable
          log_bucket: my_bucket_config_dev
+         log_path: sql/raw/
        
        - postgre_schema: raw
          postgre_table_name: my_tableq
