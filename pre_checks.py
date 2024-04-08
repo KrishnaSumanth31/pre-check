@@ -4,6 +4,14 @@ def validate_file_name(filename):
     # Check if the filename starts with "data_extract" and has a YAML extension
     return filename.startswith("data_extract") and filename.endswith(".yml")
 
+def validate_value(value):
+    # Check if the value is not null or empty
+    return value is not None and value.strip() != ""
+
+def validate_log_bucket(log_bucket):
+    # Check if the log_bucket matches the naming pattern
+    return log_bucket.startswith("my_bucket_config")
+
 def pre_checks(folder_path):
     try:
         # Check if the folder exists
@@ -19,6 +27,20 @@ def pre_checks(folder_path):
             if os.path.isfile(file_path):
                 if validate_file_name(file):
                     print(f"Valid filename: {file} - Valid file path: {file_path}")
+                    # Load YAML file and perform additional checks
+                    with open(file_path, 'r') as f:
+                        yaml_data = yaml.safe_load(f)
+                        # Perform additional checks on yaml_data
+                        if (validate_value(yaml_data.get("postgre_secret")) and
+                            validate_value(yaml_data.get("oracle_secret")) and
+                            validate_value(yaml_data.get("postgre_schema")) and
+                            validate_value(yaml_data.get("postgre_table_name")) and
+                            validate_log_bucket(yaml_data.get("log_bucket"))):
+                            print("All required values are valid.")
+                        else:
+                            print("Some required values are missing or invalid.")
+                            # Handle the case where some required values are missing or invalid
+                            # You can add further actions here if needed
                 else:
                     print(f"Invalid filename: {file}")
     
