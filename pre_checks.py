@@ -17,7 +17,7 @@ def perform_prechecks():
             print(f"Warning: File '{file_name}' does not have a YAML extension.")
 
     # Load the YAML file
-    yaml_file = os.path.join(folder_path, "data_extract.yml")
+    yaml_file = os.path.join(folder_path, "data_extract*.yml")
     with open(yaml_file, "r") as f:
         data = yaml.safe_load(f)
 
