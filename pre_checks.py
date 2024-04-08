@@ -7,22 +7,22 @@ def validate_file_name(filename):
 
 def validate_value(value, field_name):
     # Check if the value is not null or empty
-    if value is None or value.strip() == "":
+    if value is None or not value.strip():
         raise ValueError(f"The field '{field_name}' is missing or empty.")
 
 def validate_log_bucket(log_bucket):
     # Check if the log_bucket matches the naming pattern
-    if not log_bucket.startswith("my_bucket_config"):
+    if log_bucket is None or not log_bucket.startswith("my_bucket_config"):
         raise ValueError(f"The log bucket '{log_bucket}' does not match the expected pattern.")
 
 def validate_raw_bucket(raw_bucket):
     # Check if the raw_bucket matches the naming pattern
-    if not raw_bucket.startswith("az-hbs-bank-dm-eu-west-1-raw"):
+    if raw_bucket is None or not raw_bucket.startswith("az-hbs-bank-dm-eu-west-1-raw"):
         raise ValueError(f"The raw bucket '{raw_bucket}' does not match the expected pattern.")
 
 def validate_path(path):
     # Check if the path starts with the specified prefix
-    if not path.startswith(("sql/raw", "archive/hbsbank")):
+    if path is None or not path.startswith(("sql/raw", "archive/hbsbank")):
         raise ValueError(f"The path '{path}' does not match the expected pattern.")
 
 def pre_checks(folder_path):
