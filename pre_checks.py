@@ -114,4 +114,10 @@ def pre_checks(folder_path):
                     print(f"Invalid filename: {file}")
     
     except Exception as e:
-        print(
+        print(f"An error occurred: {e}")
+
+# Path to the raw folder
+raw_folder_path = "datamigration/configurations/raw"
+
+# Perform pre-checks on files in the raw folder
+pre_checks(raw_folder_path)
