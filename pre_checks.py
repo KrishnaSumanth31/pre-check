@@ -10,8 +10,8 @@ def check_file_structure(file_path):
     if not file_path.lower().endswith(('.yaml', '.yml')):
         return False
 
-    # Check if file name starts with "data_extract"
-    if not os.path.basename(file_path).startswith("data_extract"):
+    # Check if file name contains "data_extract"
+    if "data_extract" not in os.path.basename(file_path):
         return False
 
     return True
@@ -39,7 +39,7 @@ def check_configurations(config_data):
     return True
 
 def main():
-    file_path = "pre-check/datamigration/configurations/raw/data_extract*.yml"
+    file_path = "pre-check/datamigration/configurations/raw/data_extract.yml"  # Example file name
 
     if not check_file_structure(file_path):
         print("File does not meet the required structure.")
