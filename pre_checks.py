@@ -17,7 +17,7 @@ def validate_log_bucket(log_bucket):
 
 def validate_path_value(path_value, field_name, expected_prefix):
     # Check if the path_value starts with the expected_prefix
-    if not path_value.startswith(expected_prefix):
+    if path_value is None or not path_value.startswith(expected_prefix):
         raise ValueError(f"The {field_name} '{path_value}' does not match the expected pattern '{expected_prefix}*'.")
     
 def pre_checks(folder_path):
@@ -77,10 +77,14 @@ def pre_checks(folder_path):
                                         continue
                                     
                                     try:
-                                        validate_path_value(log_path, "log_path", "sql/raw/")
-                                        validate_path_value(raw_bucket, "raw_bucket", "az-hbs-bank-dm-eu-west-1-raw")
-                                        validate_path_value(raw_path, "raw_path", "hbsbank/data-migration")
-                                        validate_path_value(archival_path, "archival_path", "archive/hbsbank/data-migration")
+                                        if log_path:
+                                            validate_path_value(log_path, "log_path", "sql/raw/")
+                                        if raw_bucket:
+                                            validate_path_value(raw_bucket, "raw_bucket", "az-hbs-bank-dm-eu-west-1-raw")
+                                        if raw_path:
+                                            validate_path_value(raw_path, "raw_path", "hbsbank/data-migration")
+                                        if archival_path:
+                                            validate_path_value(archival_path, "archival_path", "archive/hbsbank/data-migration")
                                     except ValueError as ve:
                                         print(ve)
                                         continue
