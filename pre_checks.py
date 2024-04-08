@@ -3,7 +3,7 @@ import glob
 import yaml
 
 # Define the folder path
-folder_path = "datamigration/configurations/raw"
+folder_path = "pre-check/datamigration/configurations/raw"
 
 # Function to perform pre-checks
 def perform_prechecks():
