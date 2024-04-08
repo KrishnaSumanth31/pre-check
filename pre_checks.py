@@ -1,58 +1,37 @@
 import os
+import glob
 import yaml
 
-def check_file_structure(file_path):
-    # Check if file exists
-    if not os.path.exists(file_path):
-        return False
+# Define the folder path
+folder_path = "datamigration/configurations/raw"
 
-    # Check if file extension is YAML or YML
-    if not file_path.lower().endswith(('.yaml', '.yml')):
-        return False
+# Function to perform pre-checks
+def perform_prechecks():
+    # Check if every file starts with 'data_extract_' and has a YAML extension
+    files = glob.glob(os.path.join(folder_path, "data_extract_*.yml"))
+    for file_path in files:
+        file_name = os.path.basename(file_path)
+        if not file_name.startswith("data_extract_"):
+            print(f"Warning: File '{file_name}' does not follow naming convention (should start with 'data_extract_').")
+        if not file_name.endswith(".yml"):
+            print(f"Warning: File '{file_name}' does not have a YAML extension.")
 
-    # Check if file name contains "data_extract"
-    if "data_extract" not in os.path.basename(file_path):
-        return False
+    # Load the YAML file
+    yaml_file = os.path.join(folder_path, "data_extract.yml")
+    with open(yaml_file, "r") as f:
+        data = yaml.safe_load(f)
 
-    return True
+    # Check if the details section is properly formatted
+    if "details" in data:
+        for task in data["details"]["task"]:
+            if "postgre_schema" not in task or "postgre_table_name" not in task:
+                print("Error: 'postgre_schema' or 'postgre_table_name' is missing in details.")
+            if "log_bucket" not in task:
+                print("Warning: 'log_bucket' is missing in details.")
+            if "log_bucker" in task:  # Typo in the YAML file ("log_bucker" instead of "log_bucket")
+                print("Warning: Typo in key name ('log_bucker' instead of 'log_bucket').")
+    else:
+        print("Error: 'details' section is missing in YAML file.")
 
-def check_configurations(config_data):
-    required_fields = ['postgre_secret', 'oracle_secret', 'details']
-
-    for field in required_fields:
-        if field not in config_data:
-            return False
-
-    details = config_data.get('details', {})
-    tasks = details.get('task', [])
-
-    for task in tasks:
-        if not all(task.get(key) for key in ['postgre_schema', 'postgre_table_name']):
-            return False
-        
-        # Check naming convention for log_bucket
-        if 'log_bucket' in task:
-            log_bucket_value = task['log_bucket']
-            if not log_bucket_value.startswith("my_bucket_config"):
-                return False
-
-    return True
-
-def main():
-    folder_path = "pre-check/datamigration/configurations/raw"  # Example folder path
-
-    for file_name in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, file_name)
-        if os.path.isfile(file_path) and check_file_structure(file_path):
-            with open(file_path, 'r') as file:
-                try:
-                    config_data = yaml.safe_load(file)
-                    if check_configurations(config_data):
-                        print(f"Pre-checks passed successfully for {file_path}.")
-                    else:
-                        print(f"Pre-checks failed for {file_path}. Check your configurations.")
-                except yaml.YAMLError as e:
-                    print("Error loading YAML file:", e)
-
-if __name__ == "__main__":
-    main()
+# Perform pre-checks
+perform_prechecks()
