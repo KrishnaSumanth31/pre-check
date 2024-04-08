@@ -5,13 +5,15 @@ def validate_file_name(filename):
     # Check if the filename starts with "data_extract" and has a YAML extension
     return filename.startswith("data_extract") and filename.endswith(".yml")
 
-def validate_value(value):
+def validate_value(value, field_name):
     # Check if the value is not null or empty
-    return value is not None and value.strip() != ""
+    if value is None or value.strip() == "":
+        raise ValueError(f"The field '{field_name}' is missing or empty.")
 
 def validate_log_bucket(log_bucket):
     # Check if the log_bucket matches the naming pattern
-    return log_bucket.startswith("my_bucket_config")
+    if not log_bucket.startswith("my_bucket_config"):
+        raise ValueError(f"The log bucket '{log_bucket}' does not match the expected pattern.")
 
 def pre_checks(folder_path):
     try:
@@ -36,9 +38,12 @@ def pre_checks(folder_path):
                         postgre_secret = yaml_data.get("postgre_secret")
                         oracle_secret = yaml_data.get("oracle_secret")
                         
-                        # Print extracted values for better understanding
-                        print(f"postgre_secret: {postgre_secret}")
-                        print(f"oracle_secret: {oracle_secret}")
+                        try:
+                            validate_value(postgre_secret, "postgre_secret")
+                            validate_value(oracle_secret, "oracle_secret")
+                        except ValueError as ve:
+                            print(ve)
+                            continue
                         
                         details = yaml_data.get("details")
                         if details:
@@ -49,20 +54,19 @@ def pre_checks(folder_path):
                                     postgre_table_name = task.get("postgre_table_name")
                                     log_bucket = task.get("log_bucket")
                                     
-                                    print(f"postgre_schema: {postgre_schema}")
-                                    print(f"postgre_table_name: {postgre_table_name}")
-                                    print(f"log_bucket: {log_bucket}")
+                                    try:
+                                        validate_value(postgre_schema, "postgre_schema")
+                                        validate_value(postgre_table_name, "postgre_table_name")
+                                    except ValueError as ve:
+                                        print(ve)
+                                        continue
                                     
-                                    # Perform validation checks
-                                    if not (validate_value(postgre_secret) and
-                                            validate_value(oracle_secret) and
-                                            validate_value(postgre_schema) and
-                                            validate_value(postgre_table_name)):
-                                        raise ValueError("One or more required fields are missing or invalid.")
+                                    try:
+                                        validate_log_bucket(log_bucket)
+                                    except ValueError as ve:
+                                        print(ve)
+                                        continue
                                     
-                                    if not validate_log_bucket(log_bucket):
-                                        raise ValueError(f"The log bucket '{log_bucket}' does not match the expected pattern.")
-                                        
                                     print("All required values are valid.")
                             else:
                                 print("No tasks found.")
