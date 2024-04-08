@@ -15,6 +15,11 @@ def validate_log_bucket(log_bucket):
     if not log_bucket.startswith("my_bucket_config"):
         raise ValueError(f"The log bucket '{log_bucket}' does not match the expected pattern.")
 
+def validate_path_value(path_value, field_name, expected_prefix):
+    # Check if the path_value starts with the expected_prefix
+    if not path_value.startswith(expected_prefix):
+        raise ValueError(f"The {field_name} '{path_value}' does not match the expected pattern '{expected_prefix}*'.")
+    
 def pre_checks(folder_path):
     try:
         # Check if the folder exists
@@ -53,6 +58,10 @@ def pre_checks(folder_path):
                                     postgre_schema = task.get("postgre_schema")
                                     postgre_table_name = task.get("postgre_table_name")
                                     log_bucket = task.get("log_bucket")
+                                    log_path = task.get("log_path")
+                                    raw_bucket = task.get("raw_bucket")
+                                    raw_path = task.get("raw_path")
+                                    archival_path = task.get("archival_path")
                                     
                                     try:
                                         validate_value(postgre_schema, "postgre_schema")
@@ -63,6 +72,15 @@ def pre_checks(folder_path):
                                     
                                     try:
                                         validate_log_bucket(log_bucket)
+                                    except ValueError as ve:
+                                        print(ve)
+                                        continue
+                                    
+                                    try:
+                                        validate_path_value(log_path, "log_path", "sql/raw/")
+                                        validate_path_value(raw_bucket, "raw_bucket", "az-hbs-bank-dm-eu-west-1-raw")
+                                        validate_path_value(raw_path, "raw_path", "hbsbank/data-migration")
+                                        validate_path_value(archival_path, "archival_path", "archive/hbsbank/data-migration")
                                     except ValueError as ve:
                                         print(ve)
                                         continue
