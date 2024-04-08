@@ -29,4 +29,4 @@ jobs:
     - name: Run pre-checks
       run: |
         pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
-        python configuration/data_extract_pre_check.py "${{ github.workspace }}/${{ env.INPUT_DIRECTORY }}" "${{ env.INPUT_PREFIX }}"
+        python configurations/raw/data_extract_pre_check.py "${{ github.workspace }}/${{ env.INPUT_DIRECTORY }}" "${{ env.INPUT_PREFIX }}"
