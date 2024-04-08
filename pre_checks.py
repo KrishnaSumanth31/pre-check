@@ -15,6 +15,16 @@ def validate_log_bucket(log_bucket):
     if not log_bucket.startswith("my_bucket_config"):
         raise ValueError(f"The log bucket '{log_bucket}' does not match the expected pattern.")
 
+def validate_raw_bucket(raw_bucket):
+    # Check if the raw_bucket matches the naming pattern
+    if not raw_bucket.startswith("az-hbs-bank-dm-eu-west-1-raw"):
+        raise ValueError(f"The raw bucket '{raw_bucket}' does not match the expected pattern.")
+
+def validate_path(path):
+    # Check if the path starts with the specified prefix
+    if not path.startswith(("sql/raw", "archive/hbsbank")):
+        raise ValueError(f"The path '{path}' does not match the expected pattern.")
+
 def pre_checks(folder_path):
     try:
         # Check if the folder exists
@@ -53,6 +63,10 @@ def pre_checks(folder_path):
                                     postgre_schema = task.get("postgre_schema")
                                     postgre_table_name = task.get("postgre_table_name")
                                     log_bucket = task.get("log_bucket")
+                                    log_path = task.get("log_path")
+                                    raw_bucket = task.get("raw_bucket")
+                                    raw_path = task.get("raw_path")
+                                    archival_path = task.get("archival_path")
                                     
                                     try:
                                         validate_value(postgre_schema, "postgre_schema")
@@ -67,6 +81,30 @@ def pre_checks(folder_path):
                                         print(ve)
                                         continue
                                     
+                                    try:
+                                        validate_path(log_path)
+                                    except ValueError as ve:
+                                        print(ve)
+                                        continue
+                                    
+                                    try:
+                                        validate_raw_bucket(raw_bucket)
+                                    except ValueError as ve:
+                                        print(ve)
+                                        continue
+                                    
+                                    try:
+                                        validate_path(raw_path)
+                                    except ValueError as ve:
+                                        print(ve)
+                                        continue
+                                    
+                                    try:
+                                        validate_path(archival_path)
+                                    except ValueError as ve:
+                                        print(ve)
+                                        continue
+                                    
                                     print("All required values are valid.")
                             else:
                                 print("No tasks found.")
@@ -76,10 +114,4 @@ def pre_checks(folder_path):
                     print(f"Invalid filename: {file}")
     
     except Exception as e:
-        print(f"An error occurred: {e}")
-
-# Path to the raw folder
-raw_folder_path = "datamigration/configurations/raw"
-
-# Perform pre-checks on files in the raw folder
-pre_checks(raw_folder_path)
+        print(
