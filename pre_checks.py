@@ -17,10 +17,10 @@ def pre_checks(folder_path):
         for file in files:
             file_path = os.path.join(folder_path, file)
             if os.path.isfile(file_path):
-                if not validate_file_name(file):
-                    print(f"Invalid filename: {file}")
+                if validate_file_name(file):
+                    print(f"Valid file path: {file_path}")
                 else:
-                    print(f"Valid filename: {file}")
+                    print(f"Invalid filename: {file}")
     
     except Exception as e:
         print(f"An error occurred: {e}")
