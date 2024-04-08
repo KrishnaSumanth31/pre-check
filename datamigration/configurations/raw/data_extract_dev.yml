@@ -1,12 +1,12 @@
 postgre_secret : hello
-oracle_secret : myname
+oracle_secret : 
 
 details:
   task:
        - postgre_schema: raw
          postgre_table_name: mytable
-         log_bucket: my_bucket_config_dev
+         log_bucket: my_bucket_conf_dev
        
        - postgre_schema: raw
          postgre_table_name: my_tableq
-         log_bucket: my_bucket_config_dev
+         log_bucket: my_bucket_conf_dev
