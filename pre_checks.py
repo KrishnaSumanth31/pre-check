@@ -38,7 +38,7 @@ def check_configurations(config_data):
     return True
 
 def main():
-    file_path = "datamigration/configurations/raw/data_extract.yml"
+    file_path = "pre-check/datamigration/configurations/raw/data_extract.yml"
 
     if not check_file_structure(file_path):
         print("File does not meet the required structure.")
