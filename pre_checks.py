@@ -39,21 +39,20 @@ def check_configurations(config_data):
     return True
 
 def main():
-    file_path = "pre-check/datamigration/configurations/raw/data_extract.yml"  # Example file name
+    folder_path = "pre-check/datamigration/configurations/raw"  # Example folder path
 
-    if not check_file_structure(file_path):
-        print("File does not meet the required structure.")
-        return
-
-    with open(file_path, 'r') as file:
-        try:
-            config_data = yaml.safe_load(file)
-            if check_configurations(config_data):
-                print("Pre-checks passed successfully.")
-            else:
-                print("Pre-checks failed. Check your configurations.")
-        except yaml.YAMLError as e:
-            print("Error loading YAML file:", e)
+    for file_name in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, file_name)
+        if os.path.isfile(file_path) and check_file_structure(file_path):
+            with open(file_path, 'r') as file:
+                try:
+                    config_data = yaml.safe_load(file)
+                    if check_configurations(config_data):
+                        print(f"Pre-checks passed successfully for {file_path}.")
+                    else:
+                        print(f"Pre-checks failed for {file_path}. Check your configurations.")
+                except yaml.YAMLError as e:
+                    print("Error loading YAML file:", e)
 
 if __name__ == "__main__":
     main()
