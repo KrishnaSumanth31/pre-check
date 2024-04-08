@@ -4,9 +4,9 @@ oracle_secret : myname
 details:
   task:
        - postgre_schema: raw
-          postgre_table_name: mytable
-          log_bucket: my_bucket_config_dev
+         postgre_table_name: mytable
+         log_bucket: my_bucket_config_dev
        
        - postgre_schema: raw
-          postgre_table_name: my_tableq
-          log_bucket: my_bucket_config_dev
+         postgre_table_name: my_tableq
+         log_bucket: my_bucket_config_dev
