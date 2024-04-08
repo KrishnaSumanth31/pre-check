@@ -18,7 +18,7 @@ def pre_checks(folder_path):
             file_path = os.path.join(folder_path, file)
             if os.path.isfile(file_path):
                 if validate_file_name(file):
-                    print(f"Valid file path: {file_path}")
+                    print(f"Valid filename: {file} - Valid file path: {file_path}")
                 else:
                     print(f"Invalid filename: {file}")
     
