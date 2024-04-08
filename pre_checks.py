@@ -11,7 +11,7 @@ def check_file_structure(file_path):
         return False
 
     # Check if file name follows naming convention
-    if not file_path.startswith("data_extract"):
+    if not file_path.startswith("data_extract*"):
         return False
 
     return True
@@ -32,7 +32,7 @@ def check_configurations(config_data):
         
         # Check naming convention for log_bucket
         if 'log_bucket' in task:
-            if not task['log_bucket'].startswith("my_bucket_config"):
+            if not task['log_bucket'].startswith("my_bucket_config*"):
                 return False
 
     return True
