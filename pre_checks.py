@@ -32,11 +32,23 @@ def pre_checks(folder_path):
                     with open(file_path, 'r') as f:
                         yaml_data = yaml.safe_load(f)
                         # Perform additional checks on yaml_data
-                        if (validate_value(yaml_data.get("postgre_secret")) and
-                            validate_value(yaml_data.get("oracle_secret")) and
-                            validate_value(yaml_data.get("postgre_schema")) and
-                            validate_value(yaml_data.get("postgre_table_name")) and
-                            validate_log_bucket(yaml_data.get("log_bucket"))):
+                        postgre_secret = yaml_data.get("postgre_secret")
+                        oracle_secret = yaml_data.get("oracle_secret")
+                        postgre_schema = yaml_data.get("postgre_schema")
+                        postgre_table_name = yaml_data.get("postgre_table_name")
+                        log_bucket = yaml_data.get("log_bucket")
+                        
+                        print(f"postgre_secret: {postgre_secret}")
+                        print(f"oracle_secret: {oracle_secret}")
+                        print(f"postgre_schema: {postgre_schema}")
+                        print(f"postgre_table_name: {postgre_table_name}")
+                        print(f"log_bucket: {log_bucket}")
+                        
+                        if (validate_value(postgre_secret) and
+                            validate_value(oracle_secret) and
+                            validate_value(postgre_schema) and
+                            validate_value(postgre_table_name) and
+                            validate_log_bucket(log_bucket)):
                             print("All required values are valid.")
                         else:
                             print("Some required values are missing or invalid.")
