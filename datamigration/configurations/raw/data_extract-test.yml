@@ -1,5 +1,5 @@
 postgre_secret : hello
-oracle_secret : mypass
+oracle_secret : myname
 
 details:
   task:
@@ -8,5 +8,9 @@ details:
          log_bucket: my_bucket_config_dev
        
        - postgre_schema: raw
-         postgre_table_name: demo
+         postgre_table_name: my_tableq
          log_bucket: my_bucket_config_dev
+         log_path: sql/raw/labware8
+         raw_bucket: az-hbs-bank-dm-eu-west-1-raw-dev
+         raw_path: hbsbank/data-migration
+         archival_path: archive/hbsbank/data-migration
