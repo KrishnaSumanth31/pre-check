@@ -10,7 +10,7 @@ def check_file_structure(file_path):
     if not file_path.lower().endswith(('.yaml', '.yml')):
         return False
 
-    # Check if file name follows naming convention
+    # Check if file name starts with "data_extract"
     if not os.path.basename(file_path).startswith("data_extract"):
         return False
 
