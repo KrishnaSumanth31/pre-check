@@ -54,14 +54,16 @@ def pre_checks(folder_path):
                                     print(f"log_bucket: {log_bucket}")
                                     
                                     # Perform validation checks
-                                    if (validate_value(postgre_secret) and
-                                        validate_value(oracle_secret) and
-                                        validate_value(postgre_schema) and
-                                        validate_value(postgre_table_name) and
-                                        validate_log_bucket(log_bucket)):
-                                        print("All required values are valid.")
-                                    else:
-                                        print("Some required values are missing or invalid.")
+                                    if not (validate_value(postgre_secret) and
+                                            validate_value(oracle_secret) and
+                                            validate_value(postgre_schema) and
+                                            validate_value(postgre_table_name)):
+                                        raise ValueError("One or more required fields are missing or invalid.")
+                                    
+                                    if not validate_log_bucket(log_bucket):
+                                        raise ValueError(f"The log bucket '{log_bucket}' does not match the expected pattern.")
+                                        
+                                    print("All required values are valid.")
                             else:
                                 print("No tasks found.")
                         else:
