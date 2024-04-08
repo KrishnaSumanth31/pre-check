@@ -24,8 +24,8 @@ jobs:
         python-version: '3.x'  # Choose the Python version you want to use
 
     - name: Install dependencies
-      run: echo "No dependencies required"
-
+      run: pip install pyyaml
+      
     - name: Run pre-checks
       run: |
         pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
