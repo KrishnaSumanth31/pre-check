@@ -14,7 +14,7 @@ def validate_folder(folder_path):
             print(f"Incorrect file extension in {folder_path}: {file_name}")
             continue
         
-        if folder_path.endswith('stg') or folder_path.endswith('trn'):
+        if folder_path.endswith('stg/labtest') or folder_path.endswith('trn/labtest'):
             if not file_name.startswith('insert_script'):
                 print(f"Incorrect naming convention in {folder_path}: {file_name}")
             else:
