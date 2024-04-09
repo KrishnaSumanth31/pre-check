@@ -7,7 +7,7 @@ def validate_folder(folder_path):
         if not file_name.endswith('.yaml'):
             continue
         
-        if folder_path.endswith('stg') or folder_path.endswith('trn'):
+        if folder_path.endswith('stg/labtest') or folder_path.endswith('trn/labtest'):
             if file_name.startswith('insert_script'):
                 valid_files.append(file_name)
         elif folder_path.endswith('ext'):
