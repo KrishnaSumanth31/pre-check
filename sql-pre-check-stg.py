@@ -1,40 +1,27 @@
 import os
 import glob
+import yaml
 
 # Define the base directory
 base_dir = "datamigration/sql"
 
-# Check file names
-print("Checking file names...")
-insert_script_files = glob.glob(os.path.join(base_dir, "*/insert_script*.yml"))
-if not insert_script_files:
-    print("No files found with names starting with 'insert_script'.")
-else:
-    print("Files found:")
-    for file in insert_script_files:
-        print(file)
-
-# Check file extension and path
-print("\nChecking file extensions and paths...")
-yml_files = glob.glob(os.path.join(base_dir, "**/*.yml"), recursive=True) + glob.glob(os.path.join(base_dir, "**/*.yaml"), recursive=True)
-if not yml_files:
-    print("No .yml or .yaml files found.")
-else:
-    print("YAML files found:")
-    for file in yml_files:
-        print(file)
+# Load the schema
+with open("schema.yml", "r") as schema_file:
+    schema = yaml.safe_load(schema_file)
 
 # Check file contents
 print("\nChecking file contents...")
-for file in yml_files:
-    print(f"File: {file}")
-    with open(file, 'r') as f:
-        content = f.read()
-        if "executes:" in content:
-            print("File contains 'executes' section.")
-            if "delete" in content and "commit" in content and "insert" in content and content.index("delete") < content.index("commit") < content.index("insert") < content.index("commit"):
-                print("Sequence: delete, commit, insert, commit")
-            else:
-                print("Sequence doesn't match: delete, commit, insert, commit")
-        else:
-            print("File does not contain 'executes' section.")
+for root, dirs, files in os.walk(base_dir):
+    for file in files:
+        if file.endswith(".yml") or file.endswith(".yaml"):
+            file_path = os.path.join(root, file)
+            print(f"File: {file_path}")
+            with open(file_path, 'r') as f:
+                try:
+                    content = yaml.safe_load(f)
+                    if content == schema:
+                        print("Sequence matches: delete, commit, insert, commit")
+                    else:
+                        print("Sequence doesn't match: delete, commit, insert, commit")
+                except yaml.YAMLError as e:
+                    print(f"Error parsing YAML: {e}")
