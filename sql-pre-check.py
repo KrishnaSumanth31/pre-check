@@ -35,19 +35,6 @@ def validate_yaml_file(file_path, folder_path):
             with open(file_path, 'r') as f:
                 print(f"Contents of {file_path}:\n{f.read()}")
 
-def validate_sql_file(file_path, folder_path):
-    # Check if the folder is 'trn' or 'stg' and validate SQL commands sequence
-    expected_sequence = ['delete', 'commit', 'insert', 'commit']
-    sequence = []
-    with open(file_path, 'r') as sql_file:
-        for line in sql_file:
-            if line.strip().startswith(('delete', 'commit', 'insert')):
-                sequence.append(line.strip().split()[0])  # Extract the first word as the command
-    if sequence == expected_sequence:
-        print(f"Valid SQL file: {file_path}")
-    else:
-        print(f"Invalid SQL commands sequence in file: {file_path}")
-
 def validate_folder(folder_path):
     valid_files = []
     files = os.listdir(folder_path)
@@ -82,18 +69,6 @@ def validate_folder(folder_path):
                 print(f"Incorrect naming convention in {folder_path}: {file_name}")
 
     return valid_files
-
-def validate_sql_query(file_path):
-    with open(file_path, 'r') as yaml_file:
-        try:
-            data = yaml.safe_load(yaml_file)
-            if isinstance(data, dict):
-                executes = data.get('executes', [])
-                if isinstance(executes, list):
-                    return [item['sql'].strip().lower() for item in executes if 'sql' in item]
-        except yaml.YAMLError as e:
-            print(f"Error parsing YAML file {file_path}: {e}")
-    return []
 
 def validate_folder_structure(root_path):
     for root, dirs, files in os.walk(root_path):
