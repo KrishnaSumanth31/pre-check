@@ -82,7 +82,7 @@ def pre_checks(folder_path):
                                         if raw_bucket:
                                             validate_path_value(raw_bucket, "raw_bucket", "my-data-eu-west-1-raw")
                                         if raw_path:
-                                            validate_path_value(raw_path, "raw_path", "mydata/data-migration")
+                                            validate_path_value(raw_path, "raw_path", "mybank/data-migration")
                                         if archival_path:
                                             validate_path_value(archival_path, "archival_path", "archive/mydata/data-migration")
                                     except ValueError as ve:
