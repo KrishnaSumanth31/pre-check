@@ -1,4 +1,4 @@
 executes:
 
--sql: >-
+- sql: >-
       select distinct name as "name" from $mydata_schema.mytablename;
