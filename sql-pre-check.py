@@ -45,8 +45,10 @@ def validate_sql_file(file_path, folder_path):
                 sequence.append(line.strip().split()[0])  # Extract the first word as the command
     if sequence == expected_sequence:
         print(f"Valid SQL file: {file_path}")
+        return True
     else:
         print(f"Invalid SQL commands sequence in file: {file_path}")
+        return False
 
 def validate_folder(folder_path):
     valid_files = []
@@ -72,7 +74,8 @@ def validate_folder(folder_path):
             if file_name.endswith('.yaml'):
                 validate_yaml_file(file_path, folder_path)
                 # Check if the YAML file contains at least one SQL command
-                if not any(validate_sql_file(file_path, folder_path)):
+                validate_sql = validate_sql_file(file_path, folder_path)
+                if not validate_sql:
                     print(f"No SQL query found in YAML file: {file_path}")
             elif file_name.endswith('.sql'):
                 validate_sql_file(file_path, folder_path)
