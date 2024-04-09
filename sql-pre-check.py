@@ -22,7 +22,7 @@ def validate_folder_structure(root_path):
     return valid_files
 
 # Example usage:
-root_path = "artifacts-dev/sql"
+root_path = "datamigration/sql"
 valid_files = validate_folder_structure(root_path)
 for file_path in valid_files:
     print("Valid file path:", file_path)
