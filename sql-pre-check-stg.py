@@ -24,8 +24,8 @@ def validate_sequence(content):
 
 def check_yaml_files(directory):
     """Check YAML files in the specified directory."""
-    stg_dir = os.path.join(directory, "sql/stg")
-    trn_dir = os.path.join(directory, "sql/trn")
+    stg_dir = os.path.join(directory, "sql/stg/labtest")
+    trn_dir = os.path.join(directory, "sql/trn/labtest")
 
     for file_path in glob.glob(os.path.join(stg_dir, "*.yml")) + glob.glob(os.path.join(stg_dir, "*.yaml")):
         print(f"\nFile: {file_path}")
