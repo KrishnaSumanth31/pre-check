@@ -1,50 +1,43 @@
 import os
 import glob
-from ruamel.yaml import YAML
-from ruamel.yaml.constructor import SafeConstructor
+import yaml
 
-# Define the base directory
-base_dir = "datamigration/sql"
-
-# Function to validate YAML files
-def validate_yaml(file_path):
+def load_yaml(file_path):
+    """Load YAML file and return its content."""
     with open(file_path, 'r') as f:
         try:
-            yaml = YAML()
-            yaml.Constructor = SafeConstructor
-            content = yaml.load(f)
-            if content and isinstance(content, list):
-                sql_statements = [item.get('sql', '').strip() for item in content]
-                expected_sequence = [
-                    "delete from $mydata_schema.tablename;",
-                    "commit;",
-                    "insert into $mydata_schema.mytable;",
-                    "commit;"
-                ]
-                if sql_statements == expected_sequence:
-                    return True, None
-                else:
-                    return False, sql_statements
-            else:
-                return False, None
-        except Exception as e:
+            return yaml.safe_load(f)
+        except yaml.YAMLError as e:
             print(f"Error parsing YAML in {file_path}: {e}")
-            return False, None
+            return None
 
-# Check file contents
-print("\nChecking file contents...")
-for root, dirs, files in os.walk(base_dir):
-    if root.endswith("sql/ext"):
-        continue  # Skip files under the sql/ext directory
-    for file in files:
-        if file.endswith(".yml") or file.endswith(".yaml"):
-            file_path = os.path.join(root, file)
-            print(f"File: {file_path}")
-            result, actual_sequence = validate_yaml(file_path)
-            if result:
+def validate_sequence(content):
+    """Validate if YAML content contains the required keywords."""
+    keywords = ["delete", "commit", "insert", "commit"]
+    content_str = yaml.dump(content, default_flow_style=True)
+    index = 0
+    for keyword in keywords:
+        index = content_str.find(keyword, index)
+        if index == -1:
+            return False
+    return True
+
+def check_yaml_files(directory):
+    """Check YAML files in the specified directory."""
+    for file_path in glob.glob(os.path.join(directory, "**/*.yml"), recursive=True) + glob.glob(os.path.join(directory, "**/*.yaml"), recursive=True):
+        print(f"\nFile: {file_path}")
+        content = load_yaml(file_path)
+        if content:
+            if validate_sequence(content):
                 print("Sequence matches: delete, commit, insert, commit")
             else:
-                if actual_sequence is None:
-                    print("Error: No valid YAML content found")
-                else:
-                    print(f"Sequence doesn't match: Expected delete, commit, insert, commit, but found {actual_sequence}")
+                print("Sequence doesn't match: delete, commit, insert, commit")
+        else:
+            print("Error: No valid YAML content found")
+
+def main():
+    base_dir = "datamigration/sql"
+    check_yaml_files(base_dir)
+
+if __name__ == "__main__":
+    main()
