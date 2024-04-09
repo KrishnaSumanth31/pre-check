@@ -30,10 +30,11 @@ def check_yaml_files(directory):
         print(f"\nFile: {file_path}")
         content = load_yaml(file_path)
         if content:
-            if validate_sequence(content):
-                print("Sequence matches: delete, commit, insert, commit")
-            else:
-                print("Sequence doesn't match: delete, commit, insert, commit")
+            if file_path.startswith(os.path.join(directory, "sql/stg")) or file_path.startswith(os.path.join(directory, "sql/trn")):
+                if validate_sequence(content):
+                    print("Sequence matches: delete, commit, insert, commit")
+                else:
+                    print("Sequence doesn't match: delete, commit, insert, commit")
         else:
             print("Error: No valid YAML content found")
 
