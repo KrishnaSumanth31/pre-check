@@ -25,6 +25,8 @@ def validate_yaml_file(file_path):
                 raise ValueError("Invalid YAML file format")
         except yaml.YAMLError as e:
             print(f"Error parsing YAML file {file_path}: {e}")
+            with open(file_path, 'r') as f:
+                print(f"Contents of {file_path}:\n{f.read()}")
         except ValueError as e:
             print(f"Error processing YAML file {file_path}: {e}")
 
