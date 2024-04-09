@@ -14,16 +14,16 @@ def validate_folder(folder_path):
             print(f"Incorrect file extension in {folder_path}: {file_name}")
             continue
         
-        if folder_path.endswith('stg/labtest') or folder_path.endswith('trn/labtest'):
+        if folder_path.endswith('stg') or folder_path.endswith('trn'):
             if not file_name.startswith('insert_script'):
                 print(f"Incorrect naming convention in {folder_path}: {file_name}")
             else:
-                valid_files.append(file_name)
+                valid_files.append((file_name, folder_path))
         elif folder_path.endswith('ext'):
             if not file_name.startswith('ext_script'):
                 print(f"Incorrect naming convention in {folder_path}: {file_name}")
             else:
-                valid_files.append(file_name)
+                valid_files.append((file_name, folder_path))
 
     return valid_files
 
@@ -32,16 +32,9 @@ def validate_folder_structure(root_path):
         for folder in dirs:
             folder_path = os.path.join(root, folder)
             valid_files = validate_folder(folder_path)
-            for file_name in valid_files:
+            for file_info in valid_files:
+                file_name, folder_path = file_info
                 file_path = os.path.join(folder_path, file_name)
-                print(f"Valid file: {file_name} | Path: {file_path}")
-        
-        # Check labtest subfolder if exists
-        labtest_path = os.path.join(root, 'labtest')
-        if os.path.exists(labtest_path) and os.path.isdir(labtest_path):
-            valid_files = validate_folder(labtest_path)
-            for file_name in valid_files:
-                file_path = os.path.join(labtest_path, file_name)
                 print(f"Valid file: {file_name} | Path: {file_path}")
 
 # Example usage:
