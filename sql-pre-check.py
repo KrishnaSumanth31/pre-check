@@ -1,43 +1,59 @@
 import os
 import yaml
 
-def validate_yaml_content(file_path):
-    with open(file_path, 'r') as file:
+def validate_yaml_file(file_path):
+    with open(file_path, 'r') as yaml_file:
         try:
-            yaml_content = yaml.safe_load(file)
-        except yaml.YAMLError as exc:
-            print(f"Error parsing YAML file {file_path}: {exc}")
-            return False
+            data = yaml.safe_load(yaml_file)
+            sql_commands = [item['sql'] for item in data]
 
-    if not isinstance(yaml_content, list):
-        print(f"Invalid YAML structure in {file_path}. Expected a list of dictionaries.")
-        return False
+            # Check if the required SQL commands are present and in the correct sequence
+            expected_commands = ['delete', 'commit', 'insert', 'commit']
+            if sql_commands == expected_commands:
+                print(f"Valid YAML file: {file_path}")
+            else:
+                print(f"Invalid sequence of SQL commands in YAML file: {file_path}")
+        except yaml.YAMLError as e:
+            print(f"Error parsing YAML file {file_path}: {e}")
 
-    expected_statements = ['delete', 'commit', 'insert', 'commit']
-    for idx, statement in enumerate(expected_statements):
-        if idx >= len(yaml_content) or 'sql' not in yaml_content[idx] or yaml_content[idx]['sql'] != f"{statement} from $mydata_schema.tablename;":
-            print(f"Expected SQL statement '{statement}' not found in {file_path}.")
-            return False
-
-    for entry in yaml_content:
-        if '$mydata_schema' in entry['sql']:
-            print(f"Found invalid schema reference in {file_path}.")
-            return False
-
-    return True
+def validate_sql_file(file_path):
+    with open(file_path, 'r') as sql_file:
+        # Check if the file contains SQL commands
+        if any(line.strip().startswith(('insert', 'delete', 'commit')) for line in sql_file):
+            print(f"Valid SQL file: {file_path}")
+        else:
+            print(f"No SQL commands found in file: {file_path}")
 
 def validate_folder(folder_path):
     valid_files = []
-    for file_name in os.listdir(folder_path):
-        if not file_name.endswith('.yaml'):
-            continue
+    files = os.listdir(folder_path)
+    
+    # Check if there are any files in the directory
+    has_files = any(os.path.isfile(os.path.join(folder_path, f)) for f in files)
+    if not has_files:
+        return valid_files
+
+    for file_name in files:
         file_path = os.path.join(folder_path, file_name)
-        if validate_yaml_content(file_path):
-            valid_files.append((file_name, folder_path))
+        if folder_path.endswith('stg/labtest') or folder_path.endswith('trn/labtest'):
+            if file_name.endswith('.yaml'):
+                validate_yaml_file(file_path)
+            elif file_name.startswith('insert_script'):
+                valid_files.append((file_name, folder_path))
+            else:
+                print(f"Incorrect naming convention in {folder_path}: {file_name}")
+        elif folder_path.endswith('ext'):
+            if file_name.endswith('.yaml'):
+                validate_sql_file(file_path)
+            elif file_name.startswith('ext_script'):
+                valid_files.append((file_name, folder_path))
+            else:
+                print(f"Incorrect naming convention in {folder_path}: {file_name}")
+
     return valid_files
 
 def validate_folder_structure(root_path):
-    for root, dirs, _ in os.walk(root_path):
+    for root, dirs, files in os.walk(root_path):
         for folder in dirs:
             folder_path = os.path.join(root, folder)
             valid_files = validate_folder(folder_path)
