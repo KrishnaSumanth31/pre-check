@@ -1,6 +1,7 @@
 import os
 import glob
-import yaml
+from ruamel.yaml import YAML
+from ruamel.yaml.constructor import SafeConstructor
 
 # Define the base directory
 base_dir = "datamigration/sql"
@@ -9,7 +10,9 @@ base_dir = "datamigration/sql"
 def validate_yaml(file_path):
     with open(file_path, 'r') as f:
         try:
-            content = yaml.safe_load(f)
+            yaml = YAML()
+            yaml.Constructor = SafeConstructor
+            content = yaml.load(f)
             if content and isinstance(content, list):
                 sql_statements = [item.get('sql', '').strip() for item in content]
                 expected_sequence = [
@@ -24,7 +27,7 @@ def validate_yaml(file_path):
                     return False, sql_statements
             else:
                 return False, None
-        except yaml.YAMLError as e:
+        except Exception as e:
             print(f"Error parsing YAML in {file_path}: {e}")
             return False, None
 
