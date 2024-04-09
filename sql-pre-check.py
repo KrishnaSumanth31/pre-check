@@ -5,11 +5,18 @@ def validate_yaml_file(file_path):
     with open(file_path, 'r') as yaml_file:
         try:
             data = yaml.safe_load(yaml_file)
-            if 'executes' in data and isinstance(data['executes'], list):
-                sql_commands = [item['sql'].strip().lower() for item in data['executes'] if 'sql' in item]
+            if isinstance(data, list):
+                # Check if the YAML data is a list of strings (direct SQL commands)
+                if all(isinstance(item, str) for item in data):
+                    sql_commands = [item.strip().lower() for item in data]
+                # Check if the YAML data is a list of dictionaries with 'sql' keys
+                elif all(isinstance(item, dict) and 'sql' in item for item in data):
+                    sql_commands = [item['sql'].strip().lower() for item in data]
+                else:
+                    raise ValueError("Invalid YAML file format")
                 
                 # Check if the required SQL commands are present and in the correct sequence
-                expected_commands = ['select']
+                expected_commands = ['delete', 'commit', 'insert', 'commit']
                 if sql_commands == expected_commands:
                     print(f"Valid YAML file: {file_path}")
                 else:
@@ -18,13 +25,17 @@ def validate_yaml_file(file_path):
                 raise ValueError("Invalid YAML file format")
         except yaml.YAMLError as e:
             print(f"Error parsing YAML file {file_path}: {e}")
+            with open(file_path, 'r') as f:
+                print(f"Contents of {file_path}:\n{f.read()}")
         except ValueError as e:
             print(f"Error processing YAML file {file_path}: {e}")
+            with open(file_path, 'r') as f:
+                print(f"Contents of {file_path}:\n{f.read()}")
 
 def validate_sql_file(file_path):
     with open(file_path, 'r') as sql_file:
         # Check if the file contains SQL commands
-        if any(line.strip().startswith('select') for line in sql_file):
+        if any(line.strip().startswith(('insert', 'delete', 'commit')) for line in sql_file):
             print(f"Valid SQL file: {file_path}")
         else:
             print(f"No SQL commands found in file: {file_path}")
