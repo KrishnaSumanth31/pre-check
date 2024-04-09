@@ -9,8 +9,8 @@ def validate_yaml_file(file_path):
                 sql_commands = [item['sql'].strip().lower() for item in data['executes'] if 'sql' in item]
                 
                 # Check if the required SQL commands are present and in the correct sequence
-                expected_commands = ['select']
-                if sql_commands == expected_commands:
+                expected_sequence = ['delete', 'commit', 'insert', 'commit']
+                if sql_commands == expected_sequence:
                     print(f"Valid YAML file: {file_path}")
                 else:
                     print(f"Invalid sequence of SQL commands in YAML file: {file_path}")
@@ -46,10 +46,10 @@ def validate_folder(folder_path):
     for file_name in files:
         file_path = os.path.join(folder_path, file_name)
         if folder_path.endswith(('stg', 'trn')):
-            if file_name.endswith('.sql'):
-                validate_sql_file(file_path, folder_path)
-            elif file_name.endswith('.yaml'):
+            if file_name.endswith('.yaml'):
                 validate_yaml_file(file_path)
+            elif file_name.endswith('.sql'):
+                validate_sql_file(file_path, folder_path)
             elif file_name.startswith('insert_script'):
                 valid_files.append((file_name, folder_path))
             else:
