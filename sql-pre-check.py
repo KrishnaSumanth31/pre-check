@@ -71,7 +71,7 @@ def validate_folder(folder_path):
         elif folder_path.endswith('ext'):
             if file_name.endswith('.yaml'):
                 validate_yaml_file(file_path, folder_path)
-                # Check if the YAML file contains at least one SQL query
+                # Check if the YAML file contains at least one SQL command
                 if not any(validate_sql_file(file_path, folder_path)):
                     print(f"No SQL query found in YAML file: {file_path}")
             elif file_name.endswith('.sql'):
