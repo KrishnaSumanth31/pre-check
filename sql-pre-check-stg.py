@@ -24,19 +24,17 @@ def validate_sequence(content):
 
 def check_yaml_files(directory):
     """Check YAML files in the specified directory."""
-    for file_path in glob.glob(os.path.join(directory, "**/*.yml"), recursive=True) + glob.glob(os.path.join(directory, "**/*.yaml"), recursive=True):
-        if file_path.startswith(os.path.join(directory, "sql/ext")):
-            continue  # Skip files under the sql/ext directory
-        print(f"\nFile: {file_path}")
-        content = load_yaml(file_path)
-        if content:
-            if file_path.startswith(os.path.join(directory, "sql/stg")) or file_path.startswith(os.path.join(directory, "sql/trn")):
+    for directory_path in [os.path.join(directory, "sql/stg"), os.path.join(directory, "sql/trn")]:
+        for file_path in glob.glob(os.path.join(directory_path, "**/*.yml")) + glob.glob(os.path.join(directory_path, "**/*.yaml")):
+            print(f"\nFile: {file_path}")
+            content = load_yaml(file_path)
+            if content:
                 if validate_sequence(content):
                     print("Sequence matches: delete, commit, insert, commit")
                 else:
                     print("Sequence doesn't match: delete, commit, insert, commit")
-        else:
-            print("Error: No valid YAML content found")
+            else:
+                print("Error: No valid YAML content found")
 
 def main():
     base_dir = "datamigration/sql"
