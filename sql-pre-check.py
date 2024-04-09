@@ -45,7 +45,7 @@ def validate_folder(folder_path):
 
     for file_name in files:
         file_path = os.path.join(folder_path, file_name)
-        if folder_path.endswith('stg') or folder_path.endswith('trn'):
+        if folder_path.endswith(('stg', 'trn')):
             if file_name.endswith('.sql'):
                 validate_sql_file(file_path, folder_path)
             elif file_name.endswith('.yaml'):
