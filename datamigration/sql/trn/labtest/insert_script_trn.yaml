@@ -10,4 +10,4 @@ executes:
        insert into $mydata_schema.mytable;
 
 - sql: >-
-       commit
+       commit;
