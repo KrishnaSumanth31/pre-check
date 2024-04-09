@@ -5,16 +5,28 @@ def validate_yaml_file(file_path):
     with open(file_path, 'r') as yaml_file:
         try:
             data = yaml.safe_load(yaml_file)
-            sql_commands = [item['sql'].strip().lower() for item in data if 'sql' in item]
-            
-            # Check if the required SQL commands are present and in the correct sequence
-            expected_commands = ['delete', 'commit', 'insert', 'commit']
-            if sql_commands == expected_commands:
-                print(f"Valid YAML file: {file_path}")
+            if isinstance(data, list):
+                # Check if the YAML data is a list of strings (direct SQL commands)
+                if all(isinstance(item, str) for item in data):
+                    sql_commands = [item.strip().lower() for item in data]
+                # Check if the YAML data is a list of dictionaries with 'sql' keys
+                elif all(isinstance(item, dict) and 'sql' in item for item in data):
+                    sql_commands = [item['sql'].strip().lower() for item in data]
+                else:
+                    raise ValueError("Invalid YAML file format")
+                
+                # Check if the required SQL commands are present and in the correct sequence
+                expected_commands = ['delete', 'commit', 'insert', 'commit']
+                if sql_commands == expected_commands:
+                    print(f"Valid YAML file: {file_path}")
+                else:
+                    print(f"Invalid sequence of SQL commands in YAML file: {file_path}")
             else:
-                print(f"Invalid sequence of SQL commands in YAML file: {file_path}")
+                raise ValueError("Invalid YAML file format")
         except yaml.YAMLError as e:
             print(f"Error parsing YAML file {file_path}: {e}")
+        except ValueError as e:
+            print(f"Error processing YAML file {file_path}: {e}")
 
 def validate_sql_file(file_path):
     with open(file_path, 'r') as sql_file:
