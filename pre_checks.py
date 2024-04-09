@@ -80,11 +80,11 @@ def pre_checks(folder_path):
                                         if log_path:
                                             validate_path_value(log_path, "log_path", "sql/raw/")
                                         if raw_bucket:
-                                            validate_path_value(raw_bucket, "raw_bucket", "az-hbs-bank-dm-eu-west-1-raw")
+                                            validate_path_value(raw_bucket, "raw_bucket", "my-data-eu-west-1-raw")
                                         if raw_path:
-                                            validate_path_value(raw_path, "raw_path", "hbsbank/data-migration")
+                                            validate_path_value(raw_path, "raw_path", "mydata/data-migration")
                                         if archival_path:
-                                            validate_path_value(archival_path, "archival_path", "archive/hbsbank/data-migration")
+                                            validate_path_value(archival_path, "archival_path", "archive/mydata/data-migration")
                                     except ValueError as ve:
                                         print(ve)
                                         continue
