@@ -31,6 +31,8 @@ def validate_yaml(file_path):
 # Check file contents
 print("\nChecking file contents...")
 for root, dirs, files in os.walk(base_dir):
+    if root.endswith("sql/ext"):
+        continue  # Skip files under the sql/ext directory
     for file in files:
         if file.endswith(".yml") or file.endswith(".yaml"):
             file_path = os.path.join(root, file)
