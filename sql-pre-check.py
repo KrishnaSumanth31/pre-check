@@ -26,5 +26,5 @@ def validate_folder_structure(root_path):
                 print(f"Valid file: {file_name} | Path: {file_path}")
 
 # Example usage:
-root_path = "artifacts-dev/sql"
+root_path = "datamigration/sql"
 validate_folder_structure(root_path)
