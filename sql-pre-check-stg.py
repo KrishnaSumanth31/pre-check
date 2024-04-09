@@ -24,17 +24,30 @@ def validate_sequence(content):
 
 def check_yaml_files(directory):
     """Check YAML files in the specified directory."""
-    for directory_path in [os.path.join(directory, "sql/stg/labtest"), os.path.join(directory, "sql/trn/labtest")]:
-        for file_path in glob.glob(os.path.join(directory_path, "**/*.yml")) + glob.glob(os.path.join(directory_path, "**/*.yaml")):
-            print(f"\nFile: {file_path}")
-            content = load_yaml(file_path)
-            if content:
-                if validate_sequence(content):
-                    print("Sequence matches: delete, commit, insert, commit")
-                else:
-                    print("Sequence doesn't match: delete, commit, insert, commit")
+    stg_dir = os.path.join(directory, "sql/stg")
+    trn_dir = os.path.join(directory, "sql/trn")
+
+    for file_path in glob.glob(os.path.join(stg_dir, "*.yml")) + glob.glob(os.path.join(stg_dir, "*.yaml")):
+        print(f"\nFile: {file_path}")
+        content = load_yaml(file_path)
+        if content:
+            if validate_sequence(content):
+                print("Sequence matches: delete, commit, insert, commit")
             else:
-                print("Error: No valid YAML content found")
+                print("Sequence doesn't match: delete, commit, insert, commit")
+        else:
+            print("Error: No valid YAML content found")
+
+    for file_path in glob.glob(os.path.join(trn_dir, "*.yml")) + glob.glob(os.path.join(trn_dir, "*.yaml")):
+        print(f"\nFile: {file_path}")
+        content = load_yaml(file_path)
+        if content:
+            if validate_sequence(content):
+                print("Sequence matches: delete, commit, insert, commit")
+            else:
+                print("Sequence doesn't match: delete, commit, insert, commit")
+        else:
+            print("Error: No valid YAML content found")
 
 def main():
     base_dir = "datamigration/sql"
