@@ -24,28 +24,14 @@ def validate_sequence(content):
 
 def check_yaml_files(directory):
     """Check YAML files in the specified directory."""
-    stg_dir = os.path.join(directory, "sql/stg/labtest")
-    trn_dir = os.path.join(directory, "sql/trn/labtest")
-
-    for file_path in glob.glob(os.path.join(stg_dir, "*.yml")) + glob.glob(os.path.join(stg_dir, "*.yaml")):
-        print(f"\nFile: {file_path}")
+    for file_path in glob.glob(os.path.join(directory, "**/*.yml"), recursive=True) + glob.glob(os.path.join(directory, "**/*.yaml"), recursive=True):
         content = load_yaml(file_path)
         if content:
-            if validate_sequence(content):
-                print("Sequence matches: delete, commit, insert, commit")
-            else:
-                print("Sequence doesn't match: delete, commit, insert, commit")
-        else:
-            print("Error: No valid YAML content found")
-
-    for file_path in glob.glob(os.path.join(trn_dir, "*.yml")) + glob.glob(os.path.join(trn_dir, "*.yaml")):
-        print(f"\nFile: {file_path}")
-        content = load_yaml(file_path)
-        if content:
-            if validate_sequence(content):
-                print("Sequence matches: delete, commit, insert, commit")
-            else:
-                print("Sequence doesn't match: delete, commit, insert, commit")
+            if file_path.startswith(os.path.join(directory, "sql/stg")) or file_path.startswith(os.path.join(directory, "sql/trn")):
+                if validate_sequence(content):
+                    print("Sequence matches: delete, commit, insert, commit")
+                else:
+                    print("Sequence doesn't match: delete, commit, insert, commit")
         else:
             print("Error: No valid YAML content found")
 
