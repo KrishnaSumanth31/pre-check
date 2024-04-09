@@ -65,6 +65,9 @@ def validate_folder(folder_path):
         elif folder_path.endswith('ext'):
             if file_name.endswith('.yaml'):
                 validate_yaml_file(file_path)
+                # Check if the YAML file contains at least one SQL query
+                if not any(validate_sql_query(file_path)):
+                    print(f"No SQL query found in YAML file: {file_path}")
             elif file_name.endswith('.sql'):
                 validate_sql_file(file_path, folder_path)
             elif file_name.startswith('ext_script'):
@@ -73,6 +76,18 @@ def validate_folder(folder_path):
                 print(f"Incorrect naming convention in {folder_path}: {file_name}")
 
     return valid_files
+
+def validate_sql_query(file_path):
+    with open(file_path, 'r') as yaml_file:
+        try:
+            data = yaml.safe_load(yaml_file)
+            if isinstance(data, dict):
+                executes = data.get('executes', [])
+                if isinstance(executes, list):
+                    return [item['sql'].strip().lower() for item in executes if 'sql' in item]
+        except yaml.YAMLError as e:
+            print(f"Error parsing YAML file {file_path}: {e}")
+    return []
 
 def validate_folder_structure(root_path):
     for root, dirs, files in os.walk(root_path):
