@@ -5,13 +5,18 @@ def validate_folder(folder_path):
     files = os.listdir(folder_path)
     for file_name in files:
         if not file_name.endswith('.yaml'):
+            print(f"Incorrect file extension in {folder_path}: {file_name}")
             continue
         
         if folder_path.endswith('stg/labtest') or folder_path.endswith('trn/labtest'):
-            if file_name.startswith('insert_script'):
+            if not file_name.startswith('insert_script'):
+                print(f"Incorrect naming convention in {folder_path}: {file_name}")
+            else:
                 valid_files.append(file_name)
         elif folder_path.endswith('ext'):
-            if file_name.startswith('ext_script'):
+            if not file_name.startswith('ext_script'):
+                print(f"Incorrect naming convention in {folder_path}: {file_name}")
+            else:
                 valid_files.append(file_name)
 
     return valid_files
