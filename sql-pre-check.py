@@ -5,18 +5,11 @@ def validate_yaml_file(file_path):
     with open(file_path, 'r') as yaml_file:
         try:
             data = yaml.safe_load(yaml_file)
-            if isinstance(data, list):
-                # Check if the YAML data is a list of strings (direct SQL commands)
-                if all(isinstance(item, str) for item in data):
-                    sql_commands = [item.strip().lower() for item in data]
-                # Check if the YAML data is a list of dictionaries with 'sql' keys
-                elif all(isinstance(item, dict) and 'sql' in item for item in data):
-                    sql_commands = [item['sql'].strip().lower() for item in data]
-                else:
-                    raise ValueError("Invalid YAML file format")
+            if 'executes' in data and isinstance(data['executes'], list):
+                sql_commands = [item['sql'].strip().lower() for item in data['executes'] if 'sql' in item]
                 
                 # Check if the required SQL commands are present and in the correct sequence
-                expected_commands = ['delete', 'commit', 'insert', 'commit']
+                expected_commands = ['select']
                 if sql_commands == expected_commands:
                     print(f"Valid YAML file: {file_path}")
                 else:
@@ -25,20 +18,21 @@ def validate_yaml_file(file_path):
                 raise ValueError("Invalid YAML file format")
         except yaml.YAMLError as e:
             print(f"Error parsing YAML file {file_path}: {e}")
-            with open(file_path, 'r') as f:
-                print(f"Contents of {file_path}:\n{f.read()}")
         except ValueError as e:
             print(f"Error processing YAML file {file_path}: {e}")
-            with open(file_path, 'r') as f:
-                print(f"Contents of {file_path}:\n{f.read()}")
 
-def validate_sql_file(file_path):
+def validate_sql_file(file_path, folder_path):
+    # Check if the folder is 'trn' or 'stg' and validate SQL commands sequence
+    expected_sequence = ['delete', 'commit', 'insert', 'commit']
+    sequence = []
     with open(file_path, 'r') as sql_file:
-        # Check if the file contains SQL commands
-        if any(line.strip().startswith(('insert', 'delete', 'commit')) for line in sql_file):
-            print(f"Valid SQL file: {file_path}")
-        else:
-            print(f"No SQL commands found in file: {file_path}")
+        for line in sql_file:
+            if line.strip().startswith(('delete', 'commit', 'insert')):
+                sequence.append(line.strip().split()[0])  # Extract the first word as the command
+    if sequence == expected_sequence:
+        print(f"Valid SQL file: {file_path}")
+    else:
+        print(f"Invalid SQL commands sequence in file: {file_path}")
 
 def validate_folder(folder_path):
     valid_files = []
@@ -52,7 +46,9 @@ def validate_folder(folder_path):
     for file_name in files:
         file_path = os.path.join(folder_path, file_name)
         if folder_path.endswith('stg') or folder_path.endswith('trn'):
-            if file_name.endswith('.yaml'):
+            if file_name.endswith('.sql'):
+                validate_sql_file(file_path, folder_path)
+            elif file_name.endswith('.yaml'):
                 validate_yaml_file(file_path)
             elif file_name.startswith('insert_script'):
                 valid_files.append((file_name, folder_path))
@@ -62,7 +58,7 @@ def validate_folder(folder_path):
             if file_name.endswith('.yaml'):
                 validate_yaml_file(file_path)
             elif file_name.endswith('.sql'):
-                validate_sql_file(file_path)
+                validate_sql_file(file_path, folder_path)
             elif file_name.startswith('ext_script'):
                 valid_files.append((file_name, folder_path))
             else:
