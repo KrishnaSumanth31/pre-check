@@ -5,21 +5,23 @@ import yaml
 # Define the base directory
 base_dir = "datamigration/sql"
 
-# Define the expected structure and sequence
-expected_structure = [
-    {'sql': 'delete*;'},
-    {'sql': 'commit;'},
-    {'sql': 'insert*;'},
-    {'sql': 'commit;'}
-]
-
 # Function to validate YAML files
 def validate_yaml(file_path):
     with open(file_path, 'r') as f:
         try:
             content = yaml.safe_load(f)
-            if content == expected_structure:
-                return True
+            if content and isinstance(content, list):
+                sql_statements = [item.get('sql', '').strip() for item in content]
+                expected_sequence = [
+                    "delete from $mydata_schema.tablename;",
+                    "commit;",
+                    "insert into $mydata_schema.mytable;",
+                    "commit;"
+                ]
+                if sql_statements == expected_sequence:
+                    return True
+                else:
+                    return False
             else:
                 return False
         except yaml.YAMLError as e:
