@@ -29,4 +29,9 @@ jobs:
     - name: Run pre-checks
       run: |
         pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
-        python pre_checks.py "${{ github.workspace }}/${{ env.INPUT_DIRECTORY }}" "${{ env.INPUT_PREFIX }}"
+        python pre_checks.py
+        
+    - name: Run sql-pre-checks
+      run: |
+        pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
+        python sql-pre-check.py
