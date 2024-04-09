@@ -25,10 +25,11 @@ def validate_folder_structure(root_path):
     for root, dirs, files in os.walk(root_path):
         for folder in dirs:
             folder_path = os.path.join(root, folder)
-            valid_files = validate_folder(folder_path)
-            for file_name in valid_files:
-                file_path = os.path.join(folder_path, file_name)
-                print(f"Valid file: {file_name} | Path: {file_path}")
+            if os.listdir(folder_path):  # Only validate folders with files
+                valid_files = validate_folder(folder_path)
+                for file_name in valid_files:
+                    file_path = os.path.join(folder_path, file_name)
+                    print(f"Valid file: {file_name} | Path: {file_path}")
         
         # Check labtest subfolder if exists
         labtest_path = os.path.join(root, 'labtest')
