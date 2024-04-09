@@ -5,8 +5,8 @@ def validate_yaml_file(file_path):
     with open(file_path, 'r') as yaml_file:
         try:
             data = yaml.safe_load(yaml_file)
-            sql_commands = [item['sql'] for item in data]
-
+            sql_commands = [item['sql'].strip().lower() for item in data if 'sql' in item]
+            
             # Check if the required SQL commands are present and in the correct sequence
             expected_commands = ['delete', 'commit', 'insert', 'commit']
             if sql_commands == expected_commands:
@@ -44,6 +44,8 @@ def validate_folder(folder_path):
                 print(f"Incorrect naming convention in {folder_path}: {file_name}")
         elif folder_path.endswith('ext'):
             if file_name.endswith('.yaml'):
+                validate_yaml_file(file_path)
+            elif file_name.endswith('.sql'):
                 validate_sql_file(file_path)
             elif file_name.startswith('ext_script'):
                 valid_files.append((file_name, folder_path))
