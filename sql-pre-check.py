@@ -29,6 +29,8 @@ def validate_yaml_file(file_path):
                 print(f"Contents of {file_path}:\n{f.read()}")
         except ValueError as e:
             print(f"Error processing YAML file {file_path}: {e}")
+            with open(file_path, 'r') as f:
+                print(f"Contents of {file_path}:\n{f.read()}")
 
 def validate_sql_file(file_path):
     with open(file_path, 'r') as sql_file:
@@ -49,7 +51,7 @@ def validate_folder(folder_path):
 
     for file_name in files:
         file_path = os.path.join(folder_path, file_name)
-        if folder_path.endswith('stg/labtest') or folder_path.endswith('trn/labtest'):
+        if folder_path.endswith('stg') or folder_path.endswith('trn'):
             if file_name.endswith('.yaml'):
                 validate_yaml_file(file_path)
             elif file_name.startswith('insert_script'):
