@@ -19,7 +19,7 @@ def validate_yaml(file_path):
                     "commit;"
                 ]
                 if sql_statements == expected_sequence:
-                    return True
+                    return True, None
                 else:
                     return False, sql_statements
             else:
@@ -41,4 +41,7 @@ for root, dirs, files in os.walk(base_dir):
             if result:
                 print("Sequence matches: delete, commit, insert, commit")
             else:
-                print(f"Sequence doesn't match: Expected delete, commit, insert, commit, but found {actual_sequence}")
+                if actual_sequence is None:
+                    print("Error: No valid YAML content found")
+                else:
+                    print(f"Sequence doesn't match: Expected delete, commit, insert, commit, but found {actual_sequence}")
