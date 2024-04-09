@@ -21,12 +21,12 @@ def validate_yaml(file_path):
                 if sql_statements == expected_sequence:
                     return True
                 else:
-                    return False
+                    return False, sql_statements
             else:
-                return False
+                return False, None
         except yaml.YAMLError as e:
             print(f"Error parsing YAML in {file_path}: {e}")
-            return False
+            return False, None
 
 # Check file contents
 print("\nChecking file contents...")
@@ -37,7 +37,8 @@ for root, dirs, files in os.walk(base_dir):
         if file.endswith(".yml") or file.endswith(".yaml"):
             file_path = os.path.join(root, file)
             print(f"File: {file_path}")
-            if validate_yaml(file_path):
+            result, actual_sequence = validate_yaml(file_path)
+            if result:
                 print("Sequence matches: delete, commit, insert, commit")
             else:
-                print("Sequence doesn't match: delete, commit, insert, commit")
+                print(f"Sequence doesn't match: Expected delete, commit, insert, commit, but found {actual_sequence}")
