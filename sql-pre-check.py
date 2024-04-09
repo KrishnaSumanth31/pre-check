@@ -35,6 +35,19 @@ def validate_yaml_file(file_path, folder_path):
             with open(file_path, 'r') as f:
                 print(f"Contents of {file_path}:\n{f.read()}")
 
+def validate_sql_file(file_path, folder_path):
+    # Check if the folder is 'trn' or 'stg' and validate SQL commands sequence
+    expected_sequence = ['delete', 'commit', 'insert', 'commit']
+    sequence = []
+    with open(file_path, 'r') as sql_file:
+        for line in sql_file:
+            if line.strip().startswith(('delete', 'commit', 'insert')):
+                sequence.append(line.strip().split()[0])  # Extract the first word as the command
+    if sequence == expected_sequence:
+        print(f"Valid SQL file: {file_path}")
+    else:
+        print(f"Invalid SQL commands sequence in file: {file_path}")
+
 def validate_folder(folder_path):
     valid_files = []
     files = os.listdir(folder_path)
@@ -59,7 +72,7 @@ def validate_folder(folder_path):
             if file_name.endswith('.yaml'):
                 validate_yaml_file(file_path, folder_path)
                 # Check if the YAML file contains at least one SQL query
-                if not any(validate_sql_query(file_path)):
+                if not any(validate_sql_file(file_path, folder_path)):
                     print(f"No SQL query found in YAML file: {file_path}")
             elif file_name.endswith('.sql'):
                 validate_sql_file(file_path, folder_path)
