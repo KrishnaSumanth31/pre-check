@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: custom-pre-commit-checks
+        name: Run custom pre-commit checks
+        entry: ./pre-check/pre_checks.py
+        language: script
+        types: [python]
