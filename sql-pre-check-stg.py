@@ -25,7 +25,7 @@ def validate_sequence(content):
 def check_yaml_files(directory):
     """Check YAML files in the specified directory."""
     for file_path in glob.glob(os.path.join(directory, "**/insert_script*.yml"), recursive=True):
-        if os.path.isfile(file_path) and file_path.startswith('/path/to/sql/sql/stg') or file_path.startswith('/path/to/sql/sql/trn'):
+        if os.path.isfile(file_path) and file_path.startswith('datamigration/sql/stg') or file_path.startswith('datamigration/sql/trn'):
             print(f"\nValid File: {file_path}")
             content = load_yaml(file_path)
             if content:
