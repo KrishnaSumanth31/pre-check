@@ -5,21 +5,29 @@ def validate_yaml_file(file_path):
     with open(file_path, 'r') as yaml_file:
         try:
             data = yaml.safe_load(yaml_file)
-            if 'executes' in data and isinstance(data['executes'], list):
-                sql_commands = [item['sql'].strip().lower() for item in data['executes'] if 'sql' in item]
-                
-                # Check if the required SQL commands are present and in the correct sequence
-                expected_sequence = ['delete', 'commit', 'insert', 'commit']
-                if sql_commands == expected_sequence:
-                    print(f"Valid YAML file: {file_path}")
+            if isinstance(data, dict):
+                executes = data.get('executes', [])
+                if isinstance(executes, list):
+                    sql_commands = [item['sql'].strip().lower() for item in executes if 'sql' in item]
+                    
+                    # Check if the required SQL commands are present and in the correct sequence
+                    expected_sequence = ['delete', 'commit', 'insert', 'commit']
+                    if sql_commands == expected_sequence:
+                        print(f"Valid YAML file: {file_path}")
+                    else:
+                        print(f"Invalid sequence of SQL commands in YAML file: {file_path}")
                 else:
-                    print(f"Invalid sequence of SQL commands in YAML file: {file_path}")
+                    raise ValueError("Invalid executes format")
             else:
                 raise ValueError("Invalid YAML file format")
         except yaml.YAMLError as e:
             print(f"Error parsing YAML file {file_path}: {e}")
+            with open(file_path, 'r') as f:
+                print(f"Contents of {file_path}:\n{f.read()}")
         except ValueError as e:
             print(f"Error processing YAML file {file_path}: {e}")
+            with open(file_path, 'r') as f:
+                print(f"Contents of {file_path}:\n{f.read()}")
 
 def validate_sql_file(file_path, folder_path):
     # Check if the folder is 'trn' or 'stg' and validate SQL commands sequence
