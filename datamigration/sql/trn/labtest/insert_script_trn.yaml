@@ -1,1 +1,13 @@
+executes:
 
+- sql: >-
+        delete from $mydata_schema.tablename;
+
+- sql: >-
+       commit;
+
+- sql: >-
+       insert into $mydata_schema.mytable;
+
+- sql: >-
+       commit
