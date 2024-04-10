@@ -14,7 +14,7 @@ def check_sequence(file_path):
                     if sql_commands:
                         print(f"Valid YAML file with SQL query: {file_path}")
                         # Check for valid sequence for stg and trn folders
-                        if folder_path.endswith(('stg/labtest', 'trn/labtest')):
+                        if file_path.endswith(('stg/labtest', 'trn/labtest')):
                             expected_sequence = ['delete', 'commit', 'insert', 'commit']
                             if sql_commands == expected_sequence:
                                 print("Valid sequence of SQL commands.")
