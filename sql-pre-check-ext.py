@@ -4,10 +4,10 @@ import re
 def validate_yaml_file(file_path):
     # Check if file name starts with 'ext_script' and has extension .yml or .yaml
     if re.match(r'^ext_script.*\.(yml|yaml)$', os.path.basename(file_path)):
-        # Check if the file contains at least one SQL command
+        # Check if the file contains at least one SQL command with $raw_schema
         with open(file_path, 'r') as file:
             content = file.read()
-            if re.search(r'\b(SELECT|INSERT|UPDATE|DELETE)\b', content, re.IGNORECASE):
+            if re.search(r'\b(SELECT|INSERT|UPDATE|DELETE)\b.*\$raw_schema', content, re.IGNORECASE):
                 return True
     return False
 
