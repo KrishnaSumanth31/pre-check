@@ -39,4 +39,9 @@ jobs:
     - name: Run sql-pre-checks-ext
       run: |
         pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
-        python sql-pre-check-ext.py    
+        python sql-pre-check-ext.py
+        
+    - name: Run pre-checks-for-python
+      run: |
+        pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
+        python pre-check-for-python-files.py   
