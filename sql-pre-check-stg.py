@@ -18,8 +18,20 @@ def check_yaml_files(folder_paths):
                             print(f"Error reading YAML file {file_path}: {e}")
 
 def check_sequence(data, file_path):
-    expected_sequence = ['delete', 'commit', 'insert', 'commit']
-    actual_sequence = [item.get('sql').strip() for item in data if 'sql' in item]
+    with open(file_path, 'r') as yaml_file:
+        try:
+            data = yaml.safe_load(yaml_file)
+            if isinstance(data, dict):
+                executes = data.get('executes', [])
+                if isinstance(executes, list):
+                    sql_commands = [item['sql'].strip().lower() for item in executes if 'sql' in item]
+                    
+                    # Check if there's at least one SQL command
+                    if sql_commands:
+                        print(f"Valid YAML file with SQL query: {file_path}")
+                        # Check for valid sequence for stg and trn folders
+                        if folder_path.endswith(('stg/labtest', 'trn/labtest')):
+                            expected_sequence = ['delete', 'commit', 'insert', 'commit']
     if actual_sequence == expected_sequence:
         print(f"Sequence is correct in file: {file_path}")
     else:
