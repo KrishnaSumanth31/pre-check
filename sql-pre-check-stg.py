@@ -1,68 +1,30 @@
 import os
 import yaml
 
-def check_sequence(file_path):
-    try:
-        with open(file_path, 'r') as file:
-            data = yaml.safe_load(file)
-            if isinstance(data, dict):
-                executes = data.get('executes', [])
-                if isinstance(executes, list):
-                    sql_commands = [item['sql'].strip().lower() for item in executes if 'sql' in item]
-
-                    # Check if there's at least one SQL command
-                    if sql_commands:
-                        print(f"Valid YAML file with SQL query: {file_path}")
-                        # Check for valid sequence for stg and trn folders
-                        if file_path.endswith(('stg/labtest', 'trn/labtest')):
-                            expected_sequence = ['delete', 'commit', 'insert', 'commit']
-                            if sql_commands == expected_sequence:
-                                print("Valid sequence of SQL commands.")
-                                return True
+def check_yaml_files(folder_paths):
+    for folder_path in folder_paths:
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                if file.startswith("insert_script") and (file.endswith(".yml") or file.endswith(".yaml")):
+                    file_path = os.path.join(root, file)
+                    with open(file_path, 'r') as yaml_file:
+                        try:
+                            yaml_data = yaml.safe_load(yaml_file)
+                            if isinstance(yaml_data, list):
+                                check_sequence(yaml_data, file_path)
                             else:
-                                print("Invalid sequence of SQL commands.")
-                                print("SQL commands:", sql_commands)
-                                return False
-                    else:
-                        print(f"No SQL commands found in {file_path}")
-                        return False
-                else:
-                    print(f"Invalid 'executes' format in {file_path}")
-                    return False
-            else:
-                print(f"Invalid YAML format in {file_path}")
-                return False
-    except Exception as e:
-        print(f"Error occurred while processing file {file_path}: {e}")
-        return False
+                                print(f"Invalid YAML format in file: {file_path}")
+                        except yaml.YAMLError as e:
+                            print(f"Error reading YAML file {file_path}: {e}")
 
-def check_directory(directory):
-    files = [file for file in os.listdir(directory) if file.endswith('.yaml')]
-    if not files:
-        print(f"No .yaml files found in {directory}")
-        return False
+def check_sequence(data, file_path):
+    expected_sequence = ['delete', 'commit', 'insert', 'commit']
+    actual_sequence = [item.get('sql').strip() for item in data if 'sql' in item]
+    if actual_sequence == expected_sequence:
+        print(f"Sequence is correct in file: {file_path}")
     else:
-        print(f"Found .yaml files in {directory}: {files}")
-        for file in files:
-            file_path = os.path.join(directory, file)
-            if not check_sequence(file_path):
-                # If any file fails sequence check, return False
-                return False
-        return True
+        print(f"Sequence is incorrect in file: {file_path}")
 
-# Directory paths
-stg_labtest_dir = "datamigration/sql/stg/labtest"
-trn_labtest_dir = "datamigration/sql/trn/labtest"
-
-# Perform checks
-print("Checking sequence for datamigration/sql/stg/labtest:")
-if check_directory(stg_labtest_dir):
-    print("All files in datamigration/sql/stg/labtest have correct sequence.")
-else:
-    print("Some files in datamigration/sql/stg/labtest have incorrect sequence.")
-
-print("\nChecking sequence for datamigration/sql/trn/labtest:")
-if check_directory(trn_labtest_dir):
-    print("All files in datamigration/sql/trn/labtest have correct sequence.")
-else:
-    print("Some files in datamigration/sql/trn/labtest have incorrect sequence.")
+# Specify the paths of the folders you want to check
+folders_to_check = ["datamigration/sql/stg/labtest", "datamigration/sql/trn/labtest"]
+check_yaml_files(folders_to_check)
