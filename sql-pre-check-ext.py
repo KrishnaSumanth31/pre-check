@@ -17,7 +17,10 @@ def main():
         file_path = os.path.join(directory, file_name)
         if os.path.isfile(file_path):
             is_valid = validate_yaml_file(file_path)
-            print(f"File: {file_name} | Path: {file_path} | Valid SQL Command: {'Yes' if is_valid else 'No'}")
+            if is_valid:
+                print(f"File: {file_name} | Path: {file_path} | Valid SQL Command with $raw_schema: Yes")
+            else:
+                print(f"File: {file_name} | Path: {file_path} | Valid SQL Command with $raw_schema: No")
 
 if __name__ == "__main__":
     main()
