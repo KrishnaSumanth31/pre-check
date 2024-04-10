@@ -21,18 +21,18 @@ def check_yaml_files(folder_paths):
                 print(f"Error processing YAML file {file_path}: {e}")
 
 def check_sequence(executes, file_path):
-    expected_keys = ['delete', 'commit', 'insert', 'commit']
-    actual_keys = [item.get('sql', '').strip().split()[0].lower() for item in executes]
+    expected_sequence = ['delete', 'commit', 'insert', 'commit']
     
-    print(f"Expected Sequence: {expected_keys}")
-    print(f"Actual Sequence: {actual_keys}")
+    # Extracting keywords from SQL commands
+    actual_sequence = [item.get('sql', '').split()[0].strip(';').lower() for item in executes if 'sql' in item]
     
-    if actual_keys == expected_keys:
+    print(f"Expected Sequence: {expected_sequence}")
+    print(f"Actual Sequence: {actual_sequence}")
+    
+    if actual_sequence == expected_sequence:
         print(f"Sequence is correct in file: {file_path}")
     else:
         print(f"Sequence is incorrect in file: {file_path}")
-
-
 
 # Specify the paths of the folders you want to check
 folders_to_check = ["datamigration/sql/stg/labtest", "datamigration/sql/trn/labtest"]
