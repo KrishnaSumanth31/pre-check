@@ -17,7 +17,7 @@ def check_sequence(file_path):
         return False
 
 def check_directory(directory):
-    files = [file for file in os.listdir(directory) if file.endswith('.yml')]
+    files = [file for file in os.listdir(directory) if file.endswith('.yaml')]
     if not files:
         print(f"No .yml files found in {directory}")
         return False
