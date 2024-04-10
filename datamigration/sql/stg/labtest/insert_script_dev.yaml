@@ -1,13 +1,13 @@
 executes:
 
 - sql: >-
-        commit from $mydata_schema.tablename;
+        delete from $mydata_schema.tablename;
 
 - sql: >-
        commit;
 
 - sql: >-
-       delete into $mydata_schema.mytable;
+       select from $mytab_schema.table insert into $mydata_schema.mytable;
 
 - sql: >-
        commit;
