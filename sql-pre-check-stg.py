@@ -14,7 +14,7 @@ def validate_yaml_file(file_path, folder_path):
                     if sql_commands:
                         print(f"Valid YAML file with SQL query: {file_path}")
                         # Check for valid sequence for stg and trn folders
-                        if folder_path.endswith(('stg', 'trn')):
+                        if folder_path.endswith(('stg/labtest', 'trn/labtest')):
                             expected_sequence = ['delete', 'commit', 'insert', 'commit']
                             if sql_commands == expected_sequence:
                                 print("Valid sequence of SQL commands.")
@@ -61,7 +61,7 @@ def validate_folder(folder_path):
 
     for file_name in files:
         file_path = os.path.join(folder_path, file_name)
-        if folder_path.endswith(('stg', 'trn')):
+        if folder_path.endswith(('stg/labtest', 'trn/labtest')):
             if file_name.endswith('.yaml'):
                 validate_yaml_file(file_path, folder_path)
             elif file_name.endswith('.sql'):
@@ -74,8 +74,8 @@ def validate_folder(folder_path):
     return valid_files
 
 def validate_folder_structure(root_path):
-    stg_path = os.path.join(root_path, 'stg')
-    trn_path = os.path.join(root_path, 'trn')
+    stg_path = os.path.join(root_path, 'stg/labtest')
+    trn_path = os.path.join(root_path, 'trn/labtest')
     
     for folder_path in (stg_path, trn_path):
         valid_files = validate_folder(folder_path)
