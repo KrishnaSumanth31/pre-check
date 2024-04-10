@@ -21,16 +21,17 @@ def check_yaml_files(folder_paths):
                 print(f"Error processing YAML file {file_path}: {e}")
 
 def check_sequence(executes, file_path):
-    expected_sequence = ['delete', 'commit', 'insert', 'commit']
-    actual_sequence = [item.get('sql', '').strip().lower() for item in executes]
+    expected_keys = ['delete', 'commit', 'insert', 'commit']
+    actual_keys = [item.get('sql', '').strip().split()[0].lower() for item in executes]
     
-    print(f"Expected Sequence: {expected_sequence}")
-    print(f"Actual Sequence: {actual_sequence}")
+    print(f"Expected Sequence: {expected_keys}")
+    print(f"Actual Sequence: {actual_keys}")
     
-    if actual_sequence == expected_sequence:
+    if actual_keys == expected_keys:
         print(f"Sequence is correct in file: {file_path}")
     else:
         print(f"Sequence is incorrect in file: {file_path}")
+
 
 
 # Specify the paths of the folders you want to check
