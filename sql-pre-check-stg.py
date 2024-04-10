@@ -24,10 +24,14 @@ def check_sequence(executes, file_path):
     expected_sequence = ['delete', 'commit', 'insert', 'commit']
     actual_sequence = [item.get('sql', '').strip().lower() for item in executes]
     
+    print(f"Expected Sequence: {expected_sequence}")
+    print(f"Actual Sequence: {actual_sequence}")
+    
     if actual_sequence == expected_sequence:
         print(f"Sequence is correct in file: {file_path}")
     else:
         print(f"Sequence is incorrect in file: {file_path}")
+
 
 # Specify the paths of the folders you want to check
 folders_to_check = ["datamigration/sql/stg/labtest", "datamigration/sql/trn/labtest"]
