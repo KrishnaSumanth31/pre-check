@@ -21,6 +21,7 @@ def check_sequence(file_path):
                                 return True
                             else:
                                 print("Invalid sequence of SQL commands.")
+                                print("SQL commands:", sql_commands)
                                 return False
                     else:
                         print(f"No SQL commands found in {file_path}")
