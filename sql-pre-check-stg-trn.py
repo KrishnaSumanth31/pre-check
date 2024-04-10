@@ -17,7 +17,7 @@ def check_yaml_files(folder_paths):
                         if isinstance(yaml_data, dict):
                             executes = yaml_data.get('executes', [])
                             if isinstance(executes, list):
-                                check_sequence(executes, file_path)
+                                check_sequence_and_schema(executes, file_path)
                             else:
                                 print(f"Invalid YAML format in file: {file_path}")
                         else:
@@ -27,7 +27,7 @@ def check_yaml_files(folder_paths):
             else:
                 print(f"Ignored file: {file_path}. File name does not start with 'insert_script' or has invalid extension.")
 
-def check_sequence(executes, file_path):
+def check_sequence_and_schema(executes, file_path):
     expected_sequence = ['delete', 'commit', 'insert', 'commit']
     
     # Extracting SQL commands
@@ -40,10 +40,19 @@ def check_sequence(executes, file_path):
     delete_contains_schema_pattern = any(re.search(r'\$\w+_schema', command) for command in actual_sql_commands if 'delete' in command)
     insert_contains_schema_pattern = any(re.search(r'\$\w+_schema', command) for command in actual_sql_commands if 'insert' in command)
     
-    if is_correct_sequence and delete_contains_schema_pattern and insert_contains_schema_pattern:
-        print(f"Sequence is correct and contains $*_schema pattern in file: {file_path}")
+    # Print the results for sequence correctness and schema pattern presence
+    if is_correct_sequence:
+        print(f"Sequence is correct in file: {file_path}")
     else:
-        print(f"Sequence is incorrect or does not contain $*_schema pattern in file: {file_path}")
+        print(f"Sequence is incorrect in file: {file_path}")
+    
+    if delete_contains_schema_pattern and insert_contains_schema_pattern:
+        print(f"$*_schema pattern is present in both delete and insert commands in file: {file_path}")
+    else:
+        if not delete_contains_schema_pattern:
+            print(f"$*_schema pattern is missing in delete command in file: {file_path}")
+        if not insert_contains_schema_pattern:
+            print(f"$*_schema pattern is missing in insert command in file: {file_path}")
 
 # Specify the paths of the folders you want to check
 folders_to_check = ["datamigration/sql/stg/labtest", "datamigration/sql/trn/labtest"]
