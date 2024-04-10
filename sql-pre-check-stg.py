@@ -1,43 +1,26 @@
 import os
-import glob
 import yaml
 
-def load_yaml(file_path):
-    """Load YAML file and return its content."""
-    with open(file_path, 'r') as f:
-        try:
-            return yaml.safe_load(f)
-        except yaml.YAMLError as e:
-            print(f"Error parsing YAML in {file_path}: {e}")
-            return None
-
-def validate_sequence(content):
-    """Validate if YAML content contains the required keywords."""
-    keywords = ["delete", "commit", "insert", "commit"]
-    content_str = yaml.dump(content, default_flow_style=True)
-    index = 0
-    for keyword in keywords:
-        index = content_str.find(keyword, index)
-        if index == -1:
-            return False
-    return True
-
-def check_yaml_files(directory):
-    """Check YAML files in the specified directory."""
-    for file_path in glob.glob(os.path.join(directory, "**/*.yml"), recursive=True) + glob.glob(os.path.join(directory, "**/*.yaml"), recursive=True):
-        content = load_yaml(file_path)
-        if content:
-            if file_path.startswith(os.path.join(directory, "sql/stg")) or file_path.startswith(os.path.join(directory, "sql/trn")):
-                if validate_sequence(content):
-                    print("Sequence matches: delete, commit, insert, commit")
-                else:
-                    print("Sequence doesn't match: delete, commit, insert, commit")
+def check_file(filename):
+    with open(filename, 'r') as file:
+        data = yaml.safe_load(file)
+        keys = list(data.keys())
+        if keys == ['delete', 'commit', 'insert', 'commit']:
+            return True, keys
         else:
-            print("Error: No valid YAML content found")
+            return False, None
 
-def main():
-    base_dir = "datamigration/sql"
-    check_yaml_files(base_dir)
+def perform_checks(directory):
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            if file.startswith('insert_script') and file.endswith('.yaml'):
+                filepath = os.path.join(root, file)
+                passed, sequence = check_file(filepath)
+                if passed:
+                    print(f"File: {filepath}, Sequence: {sequence}, Status: Passed pre-checks.")
+                else:
+                    print(f"File: {filepath}, Sequence: None, Status: Failed pre-checks.")
 
-if __name__ == "__main__":
-    main()
+# Specify the directory to perform the checks
+directory = 'datamigration/sql'
+perform_checks(directory)
