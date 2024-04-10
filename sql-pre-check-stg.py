@@ -8,8 +8,10 @@ def check_yaml_files(folder_paths):
                 if file.startswith("insert_script") and (file.endswith(".yml") or file.endswith(".yaml")):
                     file_path = os.path.join(root, file)
                     with open(file_path, 'r') as yaml_file:
+                        yaml_content = yaml_file.read()
+                        print(f"Contents of YAML file {file_path}:\n{yaml_content}")  # Print YAML content
                         try:
-                            yaml_data = yaml.safe_load(yaml_file)
+                            yaml_data = yaml.safe_load(yaml_content)
                             if isinstance(yaml_data, list):
                                 check_sequence(yaml_data, file_path, folder_path)
                             else:
