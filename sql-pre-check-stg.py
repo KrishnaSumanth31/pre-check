@@ -70,31 +70,19 @@ def validate_folder(folder_path):
                 valid_files.append((file_name, folder_path))
             else:
                 print(f"Incorrect naming convention in {folder_path}: {file_name}")
-        elif folder_path.endswith('ext'):
-            if file_name.endswith('.yaml'):
-                validate_yaml_file(file_path, folder_path)
-                # Check if the YAML file contains at least one SQL command
-                validate_sql = validate_sql_file(file_path, folder_path)
-                if not validate_sql:
-                    print(f"No SQL query found in YAML file: {file_path}")
-            elif file_name.endswith('.sql'):
-                validate_sql_file(file_path, folder_path)
-            elif file_name.startswith('ext_script'):
-                valid_files.append((file_name, folder_path))
-            else:
-                print(f"Incorrect naming convention in {folder_path}: {file_name}")
 
     return valid_files
 
 def validate_folder_structure(root_path):
-    for root, dirs, files in os.walk(root_path):
-        for folder in dirs:
-            folder_path = os.path.join(root, folder)
-            valid_files = validate_folder(folder_path)
-            for file_info in valid_files:
-                file_name, folder_path = file_info
-                file_path = os.path.join(folder_path, file_name)
-                print(f"Valid file: {file_name} | Path: {file_path}")
+    stg_path = os.path.join(root_path, 'stg')
+    trn_path = os.path.join(root_path, 'trn')
+    
+    for folder_path in (stg_path, trn_path):
+        valid_files = validate_folder(folder_path)
+        for file_info in valid_files:
+            file_name, folder_path = file_info
+            file_path = os.path.join(folder_path, file_name)
+            print(f"Valid file: {file_name} | Path: {file_path}")
 
 # Example usage:
 root_path = "datamigration/sql"
