@@ -1,6 +1,7 @@
 import os
 import glob
 import yaml
+import re
 
 def check_yaml_files(folder_paths):
     for folder_path in folder_paths:
@@ -35,10 +36,13 @@ def check_sequence(executes, file_path):
     # Check if all expected keywords appear in the SQL commands
     is_correct_sequence = all(keyword in ' '.join(actual_sql_commands) for keyword in expected_sequence)
     
-    if is_correct_sequence:
-        print(f"Sequence is correct in file: {file_path}")
+    # Check for $*_schema pattern in SQL commands
+    contains_schema_pattern = any(re.search(r'\$\w+_schema', command) for command in actual_sql_commands)
+    
+    if is_correct_sequence and contains_schema_pattern:
+        print(f"Sequence is correct and contains $*_schema pattern in file: {file_path}")
     else:
-        print(f"Sequence is incorrect in file: {file_path}")
+        print(f"Sequence is incorrect or does not contain $*_schema pattern in file: {file_path}")
 
 # Specify the paths of the folders you want to check
 folders_to_check = ["datamigration/sql/stg/labtest", "datamigration/sql/trn/labtest"]
