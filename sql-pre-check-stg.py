@@ -2,18 +2,22 @@ import os
 import yaml
 
 def check_sequence(file_path):
-    with open(file_path, 'r') as file:
-        data = yaml.safe_load(file)
-        operations = [entry['operation'] for entry in data]
-        expected_sequence = ['delete', 'commit', 'insert', 'commit']
-        if operations != expected_sequence:
-            print(f"Sequence in file {file_path} is incorrect.")
-            return False
-    print(f"Sequence in file {file_path} is correct.")
-    return True
+    try:
+        with open(file_path, 'r') as file:
+            data = yaml.safe_load(file)
+            operations = [entry['operation'] for entry in data]
+            expected_sequence = ['delete', 'commit', 'insert', 'commit']
+            if operations != expected_sequence:
+                print(f"Sequence in file {file_path} is incorrect.")
+                return False
+        print(f"Sequence in file {file_path} is correct.")
+        return True
+    except Exception as e:
+        print(f"Error occurred while processing file {file_path}: {e}")
+        return False
 
 def check_directory(directory):
-    files = [file for file in os.listdir(directory) if file.endswith('.yaml')]
+    files = [file for file in os.listdir(directory) if file.endswith('.yml')]
     if not files:
         print(f"No .yml files found in {directory}")
         return False
@@ -31,14 +35,14 @@ stg_labtest_dir = "datamigration/sql/stg/labtest"
 trn_labtest_dir = "datamigration/sql/trn/labtest"
 
 # Perform checks
-print("Checking sequence for sql/stg/labtest:")
+print("Checking sequence for datamigration/sql/stg/labtest:")
 if check_directory(stg_labtest_dir):
-    print("All files in sql/stg/labtest have correct sequence.")
+    print("All files in datamigration/sql/stg/labtest have correct sequence.")
 else:
-    print("Some files in sql/stg/labtest have incorrect sequence.")
+    print("Some files in datamigration/sql/stg/labtest have incorrect sequence.")
 
-print("\nChecking sequence for sql/trn/labtest:")
+print("\nChecking sequence for datamigration/sql/trn/labtest:")
 if check_directory(trn_labtest_dir):
-    print("All files in sql/trn/labtest have correct sequence.")
+    print("All files in datamigration/sql/trn/labtest have correct sequence.")
 else:
-    print("Some files in sql/trn/labtest have incorrect sequence.")
+    print("Some files in datamigration/sql/trn/labtest have incorrect sequence.")
