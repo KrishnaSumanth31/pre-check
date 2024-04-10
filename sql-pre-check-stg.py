@@ -36,10 +36,11 @@ def check_sequence(executes, file_path):
     # Check if all expected keywords appear in the SQL commands
     is_correct_sequence = all(keyword in ' '.join(actual_sql_commands) for keyword in expected_sequence)
     
-    # Check for $*_schema pattern in SQL commands
-    contains_schema_pattern = any(re.search(r'\$\w+_schema', command) for command in actual_sql_commands)
+    # Check for $*_schema pattern in delete and insert SQL commands
+    delete_contains_schema_pattern = any(re.search(r'\$\w+_schema', command) for command in actual_sql_commands if 'delete' in command)
+    insert_contains_schema_pattern = any(re.search(r'\$\w+_schema', command) for command in actual_sql_commands if 'insert' in command)
     
-    if is_correct_sequence and contains_schema_pattern:
+    if is_correct_sequence and delete_contains_schema_pattern and insert_contains_schema_pattern:
         print(f"Sequence is correct and contains $*_schema pattern in file: {file_path}")
     else:
         print(f"Sequence is incorrect or does not contain $*_schema pattern in file: {file_path}")
