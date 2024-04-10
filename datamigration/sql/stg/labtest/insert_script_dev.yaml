@@ -1,7 +1,7 @@
 executes:
 
 - sql: >-
-        delete from $mydata_schema.tablename;
+        delete from $mydata.schema.tablename;
 
 - sql: >-
        commit;
