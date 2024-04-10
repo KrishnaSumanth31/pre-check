@@ -1,39 +1,20 @@
 import os
 import yaml
 
-def validate_yaml_file(file_path, folder_path):
-    with open(file_path, 'r') as yaml_file:
-        try:
-            data = yaml.safe_load(yaml_file)
-            if isinstance(data, dict):
-                executes = data.get('executes', [])
-                if isinstance(executes, list):
-                    sql_commands = [item['sql'].strip().lower() for item in executes if 'sql' in item]
-                    
-                    # Check if there's at least one SQL command
-                    if sql_commands:
-                        print(f"Valid YAML file with SQL query: {file_path}")
-                        # Check for valid sequence for stg and trn folders
-                        if folder_path.endswith(('stg/labtest', 'trn/labtest')):
-                            expected_sequence = ['delete', 'commit', 'insert', 'commit']
-                            if sql_commands == expected_sequence:
-                                print("Valid sequence of SQL commands.")
-                            else:
-                                print("Invalid sequence of SQL commands.")
-                    else:
-                        print(f"No SQL query found in YAML file: {file_path}")
-                else:
-                    raise ValueError("Invalid executes format")
-            else:
-                raise ValueError("Invalid YAML file format")
-        except yaml.YAMLError as e:
-            print(f"Error parsing YAML file {file_path}: {e}")
-            with open(file_path, 'r') as f:
-                print(f"Contents of {file_path}:\n{f.read()}")
-        except ValueError as e:
-            print(f"Error processing YAML file {file_path}: {e}")
-            with open(file_path, 'r') as f:
-                print(f"Contents of {file_path}:\n{f.read()}")
+def check_sequence(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            data = yaml.safe_load(file)
+            keys = [entry for entry in data]
+            expected_keys = ['delete', 'commit', 'insert', 'commit']
+            if keys != expected_keys:
+                print(f"Sequence in file {file_path} is incorrect.")
+                return False
+        print(f"Sequence in file {file_path} is correct.")
+        return True
+    except Exception as e:
+        print(f"Error occurred while processing file {file_path}: {e}")
+        return False
 
 def check_directory(directory):
     files = [file for file in os.listdir(directory) if file.endswith('.yaml')]
