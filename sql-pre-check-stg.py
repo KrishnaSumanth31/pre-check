@@ -5,7 +5,7 @@ def check_sequence(file_path):
     try:
         with open(file_path, 'r') as file:
             data = yaml.safe_load(file)
-            operations = [entry['operation'] for entry in data]
+            operations = [entry['type'] for entry in data]
             expected_sequence = ['delete', 'commit', 'insert', 'commit']
             if operations != expected_sequence:
                 print(f"Sequence in file {file_path} is incorrect.")
@@ -19,10 +19,10 @@ def check_sequence(file_path):
 def check_directory(directory):
     files = [file for file in os.listdir(directory) if file.endswith('.yaml')]
     if not files:
-        print(f"No .yml files found in {directory}")
+        print(f"No .yaml files found in {directory}")
         return False
     else:
-        print(f"Found .yml files in {directory}: {files}")
+        print(f"Found .yaml files in {directory}: {files}")
         for file in files:
             file_path = os.path.join(directory, file)
             if not check_sequence(file_path):
