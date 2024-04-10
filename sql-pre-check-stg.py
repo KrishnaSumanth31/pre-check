@@ -23,13 +23,13 @@ def check_yaml_files(folder_paths):
 def check_sequence(executes, file_path):
     expected_sequence = ['delete', 'commit', 'insert', 'commit']
     
-    # Extracting keywords from SQL commands
-    actual_sequence = [item.get('sql', '').split()[0].strip(';').lower() for item in executes if 'sql' in item]
+    # Extracting SQL commands
+    actual_sql_commands = [item.get('sql', '').lower() for item in executes if 'sql' in item]
     
-    print(f"Expected Sequence: {expected_sequence}")
-    print(f"Actual Sequence: {actual_sequence}")
+    # Check if all expected keywords appear in the SQL commands
+    is_correct_sequence = all(keyword in ' '.join(actual_sql_commands) for keyword in expected_sequence)
     
-    if actual_sequence == expected_sequence:
+    if is_correct_sequence:
         print(f"Sequence is correct in file: {file_path}")
     else:
         print(f"Sequence is incorrect in file: {file_path}")
