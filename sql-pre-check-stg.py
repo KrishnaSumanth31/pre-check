@@ -27,8 +27,8 @@ def check_directory(directory):
         return True
 
 # Directory paths
-stg_labtest_dir = "sql/stg/labtest"
-trn_labtest_dir = "sql/trn/labtest"
+stg_labtest_dir = "datamigration/sql/stg/labtest"
+trn_labtest_dir = "datamigration/sql/trn/labtest"
 
 # Perform checks
 print("Checking sequence for sql/stg/labtest:")
