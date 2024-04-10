@@ -36,6 +36,20 @@ def check_sequence(data, file_path):
         print(f"Sequence is correct in file: {file_path}")
     else:
         print(f"Sequence is incorrect in file: {file_path}")
+   else:
+                        print(f"No SQL query found in YAML file: {file_path}")
+                else:
+                    raise ValueError("Invalid executes format")
+            else:
+                raise ValueError("Invalid YAML file format")
+        except yaml.YAMLError as e:
+            print(f"Error parsing YAML file {file_path}: {e}")
+            with open(file_path, 'r') as f:
+                print(f"Contents of {file_path}:\n{f.read()}")
+        except ValueError as e:
+            print(f"Error processing YAML file {file_path}: {e}")
+            with open(file_path, 'r') as f:
+                print(f"Contents of {file_path}:\n{f.read()}")     
 
 # Specify the paths of the folders you want to check
 folders_to_check = ["datamigration/sql/stg/labtest", "datamigration/sql/trn/labtest"]
