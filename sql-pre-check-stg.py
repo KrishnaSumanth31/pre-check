@@ -11,13 +11,13 @@ def check_yaml_files(folder_paths):
                         try:
                             yaml_data = yaml.safe_load(yaml_file)
                             if isinstance(yaml_data, list):
-                                check_sequence(yaml_data, file_path)
+                                check_sequence(yaml_data, file_path, folder_path)
                             else:
                                 print(f"Invalid YAML format in file: {file_path}")
                         except yaml.YAMLError as e:
                             print(f"Error reading YAML file {file_path}: {e}")
 
-def check_sequence(data, file_path):
+def check_sequence(data, file_path, folder_path):
     with open(file_path, 'r') as yaml_file:
         try:
             data = yaml.safe_load(yaml_file)
@@ -32,11 +32,13 @@ def check_sequence(data, file_path):
                         # Check for valid sequence for stg and trn folders
                         if folder_path.endswith(('stg/labtest', 'trn/labtest')):
                             expected_sequence = ['delete', 'commit', 'insert', 'commit']
-    if actual_sequence == expected_sequence:
-        print(f"Sequence is correct in file: {file_path}")
-    else:
-        print(f"Sequence is incorrect in file: {file_path}")
-   else:
+                            if sql_commands == expected_sequence:
+                                print(f"Sequence is correct in file: {file_path}")
+                            else:
+                                print(f"Sequence is incorrect in file: {file_path}")
+                        else:
+                            print(f"Folder path doesn't end with 'stg/labtest' or 'trn/labtest': {folder_path}")
+                    else:
                         print(f"No SQL query found in YAML file: {file_path}")
                 else:
                     raise ValueError("Invalid executes format")
