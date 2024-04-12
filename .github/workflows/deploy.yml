@@ -24,10 +24,6 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml
       
-      - name: Run pre-checks
-        run: |
-          
-      
       #- name: Install AWS CLI
        # run: |
         #  sudo apt-get update
@@ -45,7 +41,7 @@ jobs:
          python pre_checks.py 
         #  aws s3 sync sql/ s3://your-dev-bucket/sql/
       
-      - name: Check if PR closed for develop to test
-        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.base.ref == 'test' && github.event.pull_request.merged == true
+     # - name: Check if PR closed for develop to test
+      #  if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.base.ref == 'test' && github.event.pull_request.merged == true
         #run: |
          # aws s3 sync sql/ s3://your-test-bucket/sql/
