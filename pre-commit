@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Change directory to the root of the repository
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+# Add more pre-check scripts as needed
+
+# Iterate over each Python script in the scripts folder
+for script in scripts/*.py; do
+    if [ -f "$script" ]; then
+        echo "Executing script: $script"
+        python3 "$script" || exit 1
+    fi
+done
+
+# If all pre-checks passed, allow the commit
+exit 0
