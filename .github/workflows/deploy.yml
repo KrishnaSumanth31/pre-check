@@ -2,12 +2,11 @@ name: Deploy to Dev
 
 on:
   pull_request:
-    branches:
-      - develop
-      
+    types: [closed]
+
 jobs:
   deploy:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.base.ref == 'develop' && contains(github.event.pull_request.head.ref, 'feature/')
+    if: github.event.pull_request.base.ref == 'develop' && contains(github.event.pull_request.head.ref, 'feature/')
     runs-on: ubuntu-latest
 
     steps:
