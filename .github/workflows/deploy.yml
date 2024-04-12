@@ -36,7 +36,7 @@ jobs:
         run: |
           echo "Deploying to Dev environment"
           pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
-          python pre_checks.py 
+          python scripts/pre_checks.py 
         #  aws s3 sync sql/ s3://your-dev-bucket/sql/
       
       #- name: Check if PR closed for develop to test
