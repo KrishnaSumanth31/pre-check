@@ -1,1 +1,1 @@
-hello i am text file
+hello i am text file ready to deploy in dev
