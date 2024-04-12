@@ -1,1 +1,2 @@
 hello i am text file ready to deploy in dev
+ready go
