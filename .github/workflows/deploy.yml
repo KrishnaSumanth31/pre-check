@@ -5,8 +5,8 @@ on:
     branches:
       - develop
       
-  pull_request:
-    types: [closed]
+ # pull_request:
+  #  types: [closed]
 
 jobs:
   deploy:
@@ -28,6 +28,6 @@ jobs:
           aws configure set region eu-west-2
       
       - name: Check if PR merged to develop
-        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.base.ref == 'develop' && github.event.pull_request.merged == true
+       # if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.base.ref == 'develop' && github.event.pull_request.merged == true
         run: |
           aws s3 cp datamigration/ s3://mysamplebuckethello/ --resursive
