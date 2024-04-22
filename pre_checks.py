@@ -39,13 +39,17 @@ def pre_checks(folder_path):
                     with open(file_path, 'r') as f:
                         yaml_data = yaml.safe_load(f)
                         
+                        valid_keys = []  # List to store valid keys
+                        
                         # Extract required values
                         postgre_secret = yaml_data.get("postgre_secret")
                         oracle_secret = yaml_data.get("oracle_secret")
                         
                         try:
                             validate_value(postgre_secret, "postgre_secret")
+                            valid_keys.append("postgre_secret")
                             validate_value(oracle_secret, "oracle_secret")
+                            valid_keys.append("oracle_secret")
                         except ValueError as ve:
                             print(ve)
                             continue
@@ -65,13 +69,16 @@ def pre_checks(folder_path):
                                     
                                     try:
                                         validate_value(postgre_schema, "postgre_schema")
+                                        valid_keys.append("postgre_schema")
                                         validate_value(postgre_table_name, "postgre_table_name")
+                                        valid_keys.append("postgre_table_name")
                                     except ValueError as ve:
                                         print(ve)
                                         continue
                                     
                                     try:
                                         validate_log_bucket(log_bucket)
+                                        valid_keys.append("log_bucket")
                                     except ValueError as ve:
                                         print(ve)
                                         continue
@@ -79,17 +86,21 @@ def pre_checks(folder_path):
                                     try:
                                         if log_path:
                                             validate_path_value(log_path, "log_path", "sql/raw/")
+                                            valid_keys.append("log_path")
                                         if raw_bucket:
                                             validate_path_value(raw_bucket, "raw_bucket", "my-bank-eu-west-1-raw-test")
+                                            valid_keys.append("raw_bucket")
                                         if raw_path:
                                             validate_path_value(raw_path, "raw_path", "mybank/data-migration")
+                                            valid_keys.append("raw_path")
                                         if archival_path:
                                             validate_path_value(archival_path, "archival_path", "archive/mybank/data-migration")
+                                            valid_keys.append("archival_path")
                                     except ValueError as ve:
                                         print(ve)
                                         continue
                                     
-                                    print("All required values are valid.")
+                                    print("Valid keys:", valid_keys)
                             else:
                                 print("No tasks found.")
                         else:
