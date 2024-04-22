@@ -21,11 +21,20 @@ def validate_path_value(path_value, field_name, expected_prefix):
         raise ValueError(f"The {field_name} '{path_value}' does not match the expected pattern '{expected_prefix}*'.")
     
 def get_changed_files():
-    changed_files = []
-    diff_output = os.popen("git diff-tree --no-commit-id --name-only -r HEAD").read()
-    if diff_output:
-        changed_files = diff_output.strip().split("\n")
-    return changed_files
+    try:
+        # Get changed files using git diff
+        diff_output = os.popen("git diff --name-only HEAD~1").read()
+        if diff_output:
+            return diff_output.strip().split("\n")
+    except:
+        pass
+    # If there are no previous commits, default to checking all YAML files in the repository
+    yaml_files = []
+    for root, dirs, files in os.walk(".", topdown=False):
+        for name in files:
+            if name.endswith(".yml"):
+                yaml_files.append(os.path.relpath(os.path.join(root, name)))
+    return yaml_files
 
 def pre_checks(folder_path):
     try:
@@ -33,7 +42,7 @@ def pre_checks(folder_path):
         if not os.path.exists(folder_path):
             raise FileNotFoundError(f"The folder '{folder_path}' does not exist.")
         
-        # Get changed files
+        # Get changed files or all YAML files if there are no previous commits
         changed_files = get_changed_files()
         
         # Perform pre-checks for each changed or new file
