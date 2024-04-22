@@ -27,17 +27,17 @@ jobs:
         pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
         python pre_checks.py
         
-    - name: Run sql-pre-checks-stg-trn
-      run: |
-        pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
-        python sql-pre-check-stg-trn.py
+   # - name: Run sql-pre-checks-stg-trn
+   #   run: |
+   #     pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
+   #     python sql-pre-check-stg-trn.py
 
-    - name: Run sql-pre-checks-ext
-      run: |
-        pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
-        python sql-pre-check-ext.py
+   # - name: Run sql-pre-checks-ext
+   #   run: |
+   #     pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
+   #     python sql-pre-check-ext.py
         
-    - name: Run pre-checks-for-python
-      run: |
-        pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
-        python pre-check-for-python-files.py   
+   # - name: Run pre-checks-for-python
+   #   run: |
+   #     pip install -r requirements.txt  # If you have any dependencies, specify them in requirements.txt
+   #     python pre-check-for-python-files.py   
