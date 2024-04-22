@@ -1,4 +1,4 @@
-postgre_secret : hello
+postgre_secret : hellotwo
 oracle_secret : myname
 
 details:
