@@ -20,17 +20,24 @@ def validate_path_value(path_value, field_name, expected_prefix):
     if path_value is None or not path_value.startswith(expected_prefix):
         raise ValueError(f"The {field_name} '{path_value}' does not match the expected pattern '{expected_prefix}*'.")
     
+def get_changed_files():
+    changed_files = []
+    diff_output = os.popen("git diff --name-only HEAD~1 HEAD").read()
+    if diff_output:
+        changed_files = diff_output.strip().split("\n")
+    return changed_files
+
 def pre_checks(folder_path):
     try:
         # Check if the folder exists
         if not os.path.exists(folder_path):
             raise FileNotFoundError(f"The folder '{folder_path}' does not exist.")
         
-        # Get all files in the folder
-        files = os.listdir(folder_path)
+        # Get changed files
+        changed_files = get_changed_files()
         
-        # Perform pre-checks for each file
-        for file in files:
+        # Perform pre-checks for each changed or new file
+        for file in changed_files:
             file_path = os.path.join(folder_path, file)
             if os.path.isfile(file_path):
                 if validate_file_name(file):
@@ -114,5 +121,5 @@ def pre_checks(folder_path):
 # Path to the raw folder
 raw_folder_path = "datamigration/configurations/raw"
 
-# Perform pre-checks on files in the raw folder
+# Perform pre-checks for changed or new files in the raw folder
 pre_checks(raw_folder_path)
