@@ -1,9 +1,6 @@
 name: Deploy to S3
 
-on:
-  push:
-    branches:
-      
+     
  # pull_request:
   #  types: [closed]
 
