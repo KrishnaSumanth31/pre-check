@@ -3,16 +3,12 @@ name: Pre-checks
 on:
   push:
     branches:
-      - main  # Change this to your main branch name
+      - develop  # Change this to your main branch name
 
 jobs:
   pre-checks:
     name: Pre-checks
     runs-on: ubuntu-latest
-
-    env:
-      INPUT_DIRECTORY: 'datamigration'  # Adjust this to your directory path
-      INPUT_PREFIX: 'pre_'  # Adjust this to your prefix
 
     steps:
     - name: Checkout repository
