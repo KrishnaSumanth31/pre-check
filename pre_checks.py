@@ -22,7 +22,7 @@ def validate_path_value(path_value, field_name, expected_prefix):
     
 def get_changed_files():
     changed_files = []
-    diff_output = os.popen("git diff --name-only HEAD~1 HEAD").read()
+    diff_output = os.popen("git diff-tree --no-commit-id --name-only -r HEAD").read()
     if diff_output:
         changed_files = diff_output.strip().split("\n")
     return changed_files
