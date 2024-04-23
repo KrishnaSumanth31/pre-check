@@ -10,21 +10,21 @@ def validate_value(value, field_name):
     if value is None or value.strip() == "":
         raise ValueError(f"ERROR: The field '{field_name}' is missing or empty.")
     else:
-        print(f"INFO: {field_name} is valid: {value}")
+        print(f"INFO: {field_name} is valid.")
 
 def validate_log_bucket(log_bucket):
     # Check if the log_bucket matches the naming pattern
     if not log_bucket.startswith("my_bucket_config"):
         raise ValueError(f"ERROR: The log bucket '{log_bucket}' does not match the expected pattern.")
     else:
-        print(f"INFO: log_bucket is valid: {log_bucket}")
+        print("INFO: log_bucket is valid.")
 
 def validate_path_value(path_value, field_name, expected_prefix):
     # Check if the path_value starts with the expected_prefix
     if path_value is None or not path_value.startswith(expected_prefix):
         raise ValueError(f"ERROR: The {field_name} '{path_value}' does not match the expected pattern '{expected_prefix}*'.")
     else:
-        print(f"INFO: {field_name} is valid: {path_value}")
+        print(f"INFO: {field_name} is valid.")
 
 def pre_checks(folder_path):
     try:
