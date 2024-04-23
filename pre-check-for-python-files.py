@@ -7,7 +7,7 @@ def check_file_extension(filename):
 
 def check_for_secrets(file_path):
     """Check if any secrets are hardcoded."""
-    excluded_words = ['password', 'postgre', 'schema', 'username']
+    excluded_words = ['password', 'postgre', 'schema', 'username', 'salt']
     found_hardcoded = False
     with open(file_path, 'r') as file:
         lines = file.readlines()
