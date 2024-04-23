@@ -36,7 +36,7 @@ def main():
         if os.path.isfile(file_path):
             valid, message = validate_yaml_file(file_path)
             if valid:
-                print(f"File: {file_name} | Path: {file_path} | {message}")
+                print(f"INFO: File: {file_name} | Path: {file_path} | {message}")
             else:
                 print(f"ERROR: {file_path} | {message}")
     print("INFO: All files checked.")
