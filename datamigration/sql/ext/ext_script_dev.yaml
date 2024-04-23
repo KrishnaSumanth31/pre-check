@@ -1,4 +1,4 @@
 executes:
 
 - sql: >-
-       distinct name as "name" from $trn_schema.mytablename;
+       select distinct name as "name" from $trn_schema.mytablename;
