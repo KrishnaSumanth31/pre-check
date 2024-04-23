@@ -8,17 +8,16 @@ def check_file_extension(filename):
 def check_for_secrets(file_path):
     """Check if any secrets are hardcoded."""
     excluded_words = ['password', 'postgre', 'schema', 'username']
+    found_hardcoded = False
     with open(file_path, 'r') as file:
         lines = file.readlines()
         for line_number, line in enumerate(lines, start=1):
             # Exclude specific words from the check
             if any(word in line.lower() for word in excluded_words):
-                continue
-            # Example check for 'password' keyword
-            if 'password' in line.lower():
+                found_hardcoded = True
                 print(f"ERROR: Hardcoded value found in file: {file_path}, line {line_number}: {line.strip()}")
-            else:
-                print(f"INFO: No Hardcoded value found in file: {file_path}")
+    if not found_hardcoded:
+        print(f"INFO: No hardcoded values found in file: {file_path}")
 
 def perform_pre_checks(directory):
     """Perform pre-checks on Python files within the specified directory."""
