@@ -2,5 +2,6 @@
 
 # importing the random module
 import random
+hashed = bcrypt.hashpw(password, salt)
 
 print(random.randint(0,9))
