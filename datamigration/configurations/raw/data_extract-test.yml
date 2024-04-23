@@ -11,7 +11,7 @@ details:
        - postgre_schema: raw
          postgre_table_name: my_tableq
          log_bucket: my_bucket_config_test
-         log_path: sql/raw/
+         log_path: sql/rat
          raw_bucket: my-bank-eu-west-1-raw-test
          raw_path: mybank/data-migration
          archival_path: archive/mybank/data-migration
