@@ -3,7 +3,7 @@ oracle_secret : myname
 
 details:
   task:
-       - postgre_schema: raw
+       - postgre_schema: 
          postgre_table_name: mytable
          log_bucket: my_bucket_config_dev
          log_path: sql/raw/
