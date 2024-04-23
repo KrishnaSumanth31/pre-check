@@ -10,7 +10,7 @@ def check_yaml_files(folder_paths):
         for file_path in yaml_files:
             # Check if file name starts with "insert_script" and extension is ".yaml" or ".yml"
             if os.path.basename(file_path).startswith("insert_script") and file_path.lower().endswith(('.yaml', '.yml')):
-                print(f"Valid file: {file_path}")
+                print(f"INFO: Valid file: {file_path}")
                 try:
                     with open(file_path, 'r') as yaml_file:
                         yaml_data = yaml.safe_load(yaml_file)
@@ -19,13 +19,13 @@ def check_yaml_files(folder_paths):
                             if isinstance(executes, list):
                                 check_sequence_and_schema(executes, file_path)
                             else:
-                                print(f"Invalid YAML format in file: {file_path}")
+                                print(f"ERROR: Invalid YAML format in file: {file_path}")
                         else:
-                            print(f"Invalid YAML format in file: {file_path}")
+                            print(f"ERROR: Invalid YAML format in file: {file_path}")
                 except Exception as e:
-                    print(f"Error processing YAML file {file_path}: {e}")
+                    print(f"ERROR: Error processing YAML file {file_path}: {e}")
             else:
-                print(f"Ignored file: {file_path}. File name does not start with 'insert_script' or has invalid extension.")
+                print(f"INFO: Ignored file: {file_path}. File name does not start with 'insert_script' or has invalid extension.")
 
 def check_sequence_and_schema(executes, file_path):
     expected_sequence = ['delete', 'commit', 'insert', 'commit']
@@ -42,17 +42,17 @@ def check_sequence_and_schema(executes, file_path):
     
     # Print the results for sequence correctness and schema pattern presence
     if is_correct_sequence:
-        print(f"Sequence is correct in file: {file_path}")
+        print(f"INFO: Sequence is correct in file: {file_path}")
     else:
-        print(f"Sequence is incorrect in file: {file_path}")
+        print(f"ERROR: Sequence is incorrect in file: {file_path}")
     
     if delete_contains_schema_pattern and insert_contains_schema_pattern:
-        print(f"$*_schema pattern is present in both delete and insert commands in file: {file_path}")
+        print(f"INFO: $*_schema pattern is present in both delete and insert commands in file: {file_path}")
     else:
         if not delete_contains_schema_pattern:
-            print(f"$*_schema pattern is missing in delete command in file: {file_path}")
+            print(f"ERROR: $*_schema pattern is missing in delete command in file: {file_path}")
         if not insert_contains_schema_pattern:
-            print(f"$*_schema pattern is missing in insert command in file: {file_path}")
+            print(f"ERROR: $*_schema pattern is missing in insert command in file: {file_path}")
 
 # Specify the paths of the folders you want to check
 folders_to_check = ["datamigration/sql/stg/labtest", "datamigration/sql/trn/labtest"]
