@@ -1,10 +1,6 @@
 import os
 import re
 
-def check_file_name(filename):
-    """Check if the file name matches the pattern."""
-    return re.match(r'testlab_to_me.*\.py', filename)
-
 def check_file_extension(filename):
     """Check if the file extension is '.py'."""
     return filename.endswith('.py')
@@ -28,7 +24,7 @@ def perform_pre_checks(directory):
         for file in files:
             if file.endswith('.py'):
                 file_path = os.path.join(root, file)
-                if check_file_name(file) and check_file_extension(file):
+                if check_file_extension(file):
                     print(f"INFO: Valid file: {file_path}")
                     check_for_secrets(file_path)
                 else:
