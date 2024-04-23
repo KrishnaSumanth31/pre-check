@@ -17,6 +17,8 @@ def check_for_secrets(file_path):
             # Example check for 'password' keyword
             if 'password' in line.lower():
                 print(f"ERROR: Hardcoded value found in file: {file_path}, line {line_number}: {line.strip()}")
+            else:
+                print(f"INFO: No Hardcoded value found in file: {file_path}
 
 def perform_pre_checks(directory):
     """Perform pre-checks on Python files within the specified directory."""
