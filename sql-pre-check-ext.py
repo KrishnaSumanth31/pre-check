@@ -31,18 +31,15 @@ def validate_yaml_file(file_path):
 
 def main():
     directory = 'datamigration/sql/ext'  # Path to the directory
-    all_valid = True
     for file_name in os.listdir(directory):
         file_path = os.path.join(directory, file_name)
         if os.path.isfile(file_path):
             valid, message = validate_yaml_file(file_path)
-            print(f"File: {file_name} | Path: {file_path} | {message}")
-            if not valid:
-                all_valid = False
-    if all_valid:
-        print("INFO: All files passed pre-check.")
-    else:
-        print("ERROR: Some files failed pre-check.")
+            if valid:
+                print(f"File: {file_name} | Path: {file_path} | {message}")
+            else:
+                print(f"ERROR: {file_path} | {message}")
+    print("INFO: All files checked.")
 
 if __name__ == "__main__":
     main()
