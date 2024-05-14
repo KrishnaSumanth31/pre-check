@@ -1,0 +1,36 @@
+import boto3
+from datetime import datetime, timedelta
+from dateutil.parser import parse
+from dateutil import tz
+
+# Define your S3 bucket names
+buckets = ['bucket1_name', 'bucket2_name', 'bucket3_name']
+
+# Function to delete files older than 30 days in a specific bucket
+def delete_old_files(bucket_name):
+    s3 = boto3.client('s3')
+    
+    # List all objects in the bucket
+    objects = s3.list_objects_v2(Bucket=bucket_name)['Contents']
+    
+    # Get current time in UTC
+    now = datetime.now(tz=tz.UTC)
+    
+    # Define threshold for deletion (30 days ago)
+    threshold = now - timedelta(days=30)
+    
+    # Loop through each object
+    for obj in objects:
+        last_modified = parse(obj['LastModified']).astimezone(tz.UTC)
+        
+        # If the object is older than 30 days, delete it
+        if last_modified < threshold:
+            key = obj['Key']
+            print(f"Deleting {key} from {bucket_name}")
+            s3.delete_object(Bucket=bucket_name, Key=key)
+
+# Call the function for each bucket
+for bucket in buckets:
+    delete_old_files(bucket)
+
+print("Old files deletion complete.")
